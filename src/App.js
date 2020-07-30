@@ -1,21 +1,18 @@
 import React from 'react';
-
-//import home from './components/home'
+// import HomeMenu from './components/menu'
+// import Home from './components/home'
 
 import './App.css';
-import customer from './components/customer';
+// import { Container } from 'semantic-ui-react';
+// import customer from './components/customer';
 //import Login from './components/login';
 const login = () =>{
   window.location.href="/login"
 }
 
 function App() {
- 
   return (
-    <div>
-    <customer/>
-    <button onClick={login}>Login</button>
-    </div>
+    <button className="ui button" onClick={login}>Login</button>  
   );
 }
 

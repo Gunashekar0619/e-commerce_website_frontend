@@ -3,7 +3,7 @@ import Menu from './menu'
 import { withCookies } from 'react-cookie';
 import '../App.css';
 import {
-  // Modal,
+    // Modal,
     Button,
     // Image,
     Header,
@@ -14,14 +14,15 @@ import {
     Grid,
     Form,
     Input,
-    Select,
+    
     Icon,
     Modal,
     // TextArea,
     GridRow,
     Segment,
     FormGroup,
-    Message} from 'semantic-ui-react'
+    } from 'semantic-ui-react'
+import { Link } from 'react-router-dom';
 
 class Profile extends Component {
   constructor(props){
@@ -76,7 +77,7 @@ class Profile extends Component {
     }
  
     userinputchanged = event => {
-      // console.log(this.state.current_user);
+      console.log(this.state.current_user);
       
       let usdtl = this.state.current_user;
       usdtl[event.target.name] = event.target.value;
@@ -85,7 +86,6 @@ class Profile extends Component {
 
     proinputchanged = event => {
       console.log(this.state.userdetails);
-      
       let usdtl = this.state.userdetails;
       usdtl[event.target.name] = event.target.value;
       this.setState({userdetails: usdtl})
@@ -130,13 +130,20 @@ class Profile extends Component {
       
     }
 
+    actform = (f) =>{
+      console.log(f);
+      
+      this.setState({activeform : f})
+  }
+  
     upview= ()=>{
       this.setState({updatefm:!this.state.updatefm})
     }
-    reload = () =>{
-      window.location.reload(true);
+    reload () { 
+      window.location.reload()
     }
     render() {
+      
       // const genderOptions = [
       //   { key: 'm', text: 'Male', value: 'male' },
       //   { key: 'f', text: 'Female', value: 'female' },
@@ -146,13 +153,13 @@ class Profile extends Component {
       // console.log(this.state.token);
       // this.findtype()
         return ( <Container>
-            <Menu active="profile"></Menu>        
+        <Menu  present = {()=>this.actform}  user = {this.state.userdetails.type} active="profile"></Menu>        
         {this.state.isupdated ? (<div className="global">
-          <Modal open="true" basic size='small'>
-          <Header icon='check' content='Profile Update' />
+          <Modal open style={{marginTop : "10%" , marginLeft : "25%" , maxHeight : "300px"}} basic size='small'>
+          <Header icon={ 'check'} content='Profile Update' />
           <Modal.Actions>
             <Button onClick={this.reload} color='green' inverted>
-              <Icon name='checkmark' /> Yes
+              <Icon  name='checkmark' /> Yes
             </Button>
           </Modal.Actions>
         </Modal></div>
@@ -162,6 +169,7 @@ class Profile extends Component {
         <Segment  style={{width:"50%"}}>
           <Container>
             <Header>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Profile Details</Header>
+            <Divider/>
             <Grid columns="2" >
               <GridRow>
                 <GridColumn width="4" >
@@ -185,12 +193,14 @@ class Profile extends Component {
                     <Label>{this.state.userdetails.country}</Label><br/><br/>
                 </GridColumn>    
                 </GridRow>            
-            </Grid><Button onClick={this.upview} floated="right">Update</Button>
-            <span>&nbsp;</span><br/><span>&nbsp;</span>
+            </Grid>
+            <Divider/>
+            <Link  to ={`/${this.state.userdetails.type}`}><Button active>Back</Button></Link>
+            <Button onClick={this.upview} positive floated="right">Update</Button>
             </Container>
         </Segment> ):(<Segment>
-          <div><Button floated="right" onClick={this.reload}>Back</Button></div>
-          <Label size="large">Edit Profile</Label>
+          <Button active onClick={this.reload} floated="right">Back</Button>
+          <h3 size="large">Edit Profile</h3>
           <Divider/>
           <Form style={{width:"100%"}}>
         <Form.Group widths='equal'>
@@ -203,7 +213,20 @@ class Profile extends Component {
             onChange={this.userinputchanged}
             value={this.state.current_user.username}
           />
-          <Form.Field
+          <Form.Field>
+            <span>Gender</span>
+            <select placeholder="gender" name="gender" onChange={this.proinputchanged} value={this.state.userdetails.gender}>
+            <optgroup disabled>
+              <option>Select gender</option>
+            </optgroup>
+            <optgroup>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </optgroup>
+          </select>
+          </Form.Field>
+          {/* <Form.Field
             name='gender'
             control={Select}
             placeholder={this.state.userdetails.gender}
@@ -211,11 +234,11 @@ class Profile extends Component {
                       { text:"Female", value: 'female'},
                       {  text:"Other", value: 'other'}]}
             label={{ children: 'Gender', htmlFor: 'form-select-control-gender' }}
-           
-            // search
+            search
             onChange={this.proinputchanged}
-            //searchInput={{ id: 'form-select-control-gender' }}
-          />
+            searchInput={{ id: 'form-select-control-gender' }}
+            value = {this.state.userdetails.type}
+          /> */}
         </Form.Group><Form.Group widths={"equal"} >
         <Form.Field 
           name='email'
@@ -255,12 +278,14 @@ class Profile extends Component {
         /></FormGroup>
         <FormGroup>
         <Form.Field
+          negative
           id='form-button-control-public'
           control={Button}
           onClick={this.reload}
           content='Cancel'
         />
         <Form.Field
+        positive
           id='form-button-control-public'
           control={Button}
           content='Update'
@@ -269,7 +294,7 @@ class Profile extends Component {
        </FormGroup>
       </Form></Segment>)}
       </Container>
-        )
+      )
     }
 }
 

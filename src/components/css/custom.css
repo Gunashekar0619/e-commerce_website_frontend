@@ -1,0 +1,31 @@
+.admin_background {
+  background-image: url('../images/admin_homeBG.jpeg'); 
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  min-height: 800px;
+}
+.head{
+  padding-top:20px ;
+  font-size: 25px;
+  font-family: Georgia, serif;
+  color: aliceblue;
+  text-align: center;
+}
+.font-foot{
+  float: right;
+  font-family: Georgia, serif;
+  color: aliceblue;
+  text-align: right;
+  font-size: 30px;
+}
+.count{
+  text-align: center;
+  font-family:Baskerville Old Face;
+  color: aliceblue;
+}
+.modal{
+  height: auto;
+  
+  padding-bottom: 0px;
+}

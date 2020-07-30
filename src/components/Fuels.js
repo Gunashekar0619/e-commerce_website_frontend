@@ -1,4 +1,4 @@
-//import _ from 'lodash'
+import _ from 'lodash'
 import React, { Component, createRef } from 'react'
 import { withCookies} from 'react-cookie';
 // import Oreo from '../images/oreo-img.jpg';
@@ -41,7 +41,7 @@ import {
 class Food extends Component {
   state = {
     open:false,
-      token: this.props.token,
+      token: this.props.user,
       length: "",
       Item :{
         "id": "",
@@ -54,10 +54,43 @@ class Food extends Component {
         "avg_ratings": ""
       },
       flist :[],
-      plist:[] ,
-      itemsel:""     
+      itemsel:"",
+      updatedList: [],
+      count:0 
   }    
 
+  stock = async (name)=>{
+    // console.log("1 inside");
+    
+     return fetch(`http://127.0.0.1:8000/api/Goods/duplicate/?name=${name}`,{
+      method : "Get",
+      headers : {
+        'Content-Type':'application/json',
+        'Authorization' : `Token ${this.state.token}`
+      }
+    }).then( resp => resp.json() )
+    .then(res => { 
+      return res.count;
+    });
+      // this.setState({  count : res.count})})
+    // console.log(count);
+  }
+  
+  async componentWillMount(){
+
+    const goods = _.uniqBy(this.props.list, 'name');
+  
+    for (const food of goods) {
+      // get the count
+      let count = await this.stock(food.name);
+      // console.log(count);
+      let stock = food.stock;
+      count = count + stock ;
+      food['count'] = count;
+      // console.log(food);
+      this.setState({updatedList:[...this.state.updatedList,food]})
+    }
+  } 
 
 componentDidMount(){
    //  console.log(this.props.list)
@@ -78,9 +111,11 @@ imagedisplay = food => {
   }
   
 }
+
 closeConfigShow = (closeOnEscape, closeOnDimmerClick,name) => () => {
   this.setState({ closeOnEscape, closeOnDimmerClick, open: true ,itemsel:name})
 }
+ 
 close = () => this.setState({ open: false })
   render() {
     // this.state.flist.map(item => {
@@ -107,7 +142,7 @@ close = () => this.setState({ open: false })
                         { this.props.list.map(food => {   
                             return(                    
                             <Grid.Column key={food.id} >
-                              <Segment size="small" onClick={this.closeConfigShow(true, false,food)}  piled style={{"width":"450px","height":"140px"}} >
+                              <Segment size="small" onClick={this.closeConfigShow(true, false,food)}  piled style={{"width":"450px","height":"170px"}} >
                               <Grid columns='two'>
                               <Grid.Column width={6}>
                                   <Image rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(food)} />
@@ -115,11 +150,12 @@ close = () => this.setState({ open: false })
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
                                 <Label>Price : $ {food.price} </Label><br/>
+                                <Label>Available Stock :  {food.count} </Label><br/>
                                 <Button primary onClick={this.closeConfigShow(true, false,food)} floated='right'>
                                         Order
                                       <Icon name='right chevron' />
                                       </Button>
-                                <Label>Limited</Label>
+                                
                                
                                </Grid.Column>
                                 </Grid>
@@ -151,6 +187,8 @@ close = () => this.setState({ open: false })
             <Label>Type : {this.state.itemsel.type}</Label><br/>
             <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
             <Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} maxRating={5} />
+            <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
+            <br/><Label>Available in : {this.state.itemsel.count}</Label><br/>
             <Button onClick={orderclicked}
               positive
               floated = "right">Order</Button> 

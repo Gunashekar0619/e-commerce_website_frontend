@@ -1,11 +1,20 @@
-// import _ from 'lodash'
+import _ from 'lodash'
 import React, { Component, createRef } from 'react'
 import { withCookies} from 'react-cookie';
 import Darkfantasy from './images/darkfantasy-img.jpg';
 import Oreo from './images/oreo.jpeg';
 import Donuts from './images/donuts-img.jpg';
 import Snickers from './images/snickers-img.jpg';
-import Dairymilk from './images/dairymilk-img.jpeg';
+import Dairym from './images/dairymilk-img.jpeg';
+import Diseal from './images/diseal-img.jpg'
+import Petrol from './images/petrol-img.jpg';
+import Onion from './images/onion-img.jpg';
+import Carrot from './images/carrot.jpg';
+import Water from './images/bisleri500ml-img.png';
+// // import Food from './Food';
+// import Others from './others';
+// import Fuels from './Fuels';
+// import Grocery from './grocery';
 import Order from './order'
 // import Itemdisplay from './itemdisplay';
 import {
@@ -45,7 +54,7 @@ Rating,
 class Food extends Component {
   state = {
     open: false,
-      token: this.props.token,
+      token: this.props.user,
       length: "",
       Item :{
         "id": "",
@@ -58,13 +67,14 @@ class Food extends Component {
         "avg_ratings": ""
       },
       flist :[],
+      updatedList: [],
       plist:[],
       // modal1 :false,
       itemsel:"",
       instock:true,
       uprate:"",
+      count:0
   }    
-
 
   contextRef = createRef()
 
@@ -77,7 +87,7 @@ class Food extends Component {
         method: 'POST',
         headers: {
             'Content-Type':'application/json',
-            'Authorization' : `Token ${this.props.user}`
+            'Authorization' : `Token ${this.state.user}`
         },
         body: JSON.stringify({stars : rating })
         }).then( resp => this.getDetails())
@@ -95,7 +105,7 @@ class Food extends Component {
         method: 'GET',
         headers: {
             'Content-Type':'application/json',
-            'Authorization' : `Token ${this.props.user}`
+            
         }
         }).then( resp => resp.json())
         .then ( res => {this.setState({itemsel:res});
@@ -104,20 +114,55 @@ class Food extends Component {
         )
         .catch(error => console.log(error))
 }
-imagedisplay = food => {
-  if(food === "oreo"){
-    return(Oreo)
-  }else if(food === "Darkfantasy"){
-    return (Darkfantasy)
-  }else if(food === "Donuts"){
-    return (Donuts)
-  }else if(food === "Snickers"){
-    return (Snickers)
-  }else if(food === "Dairymilk"){
-    return(Dairymilk)
-  }else {let r = this.state.itemsel.name
-  return(r) } 
-}
+// imagedisplay = food => {
+//   if(food === "Oreo"){
+//     return(Oreo)
+//   }else if(food === "Darkfantasy"){
+//     return (Darkfantasy)
+//   }else if(food === "Donuts"){
+//     return (Donuts)
+//   }else if(food === "Snickers"){
+//     return (Snickers)
+//   }else if(food=== "Dairymilk"){
+//     return(Dairym)
+//   }else if(food === "petrol"){
+//     return(Petrol)
+//   }else if(food === "diseal"){
+//     return (Diseal)
+//   }else if(food === "onion"){
+//     return (Onion)
+//   }else if(food === "carrot"){
+//     return (Carrot)
+//   }else if(food === "water"){
+//     return (Water)
+//   }
+// }
+
+imagedisplay = food =>{
+  switch (food) {
+    case "Oreo":
+      return(Oreo)
+    case "Darkfantasy":
+      return (Darkfantasy)
+    case "Donuts":
+      return (Donuts)
+    case "Snickers":
+      return (Snickers)
+    case "Dairymilk":
+      return(Dairym)
+    case "petrol":
+      return(Petrol)
+    case "diseal":
+      return (Diseal)
+    case "onion":
+      return (Onion)
+    case "carrot":
+      return (Carrot)
+    case "water":
+      return (Water)
+    default:
+      break;
+  }}
 
 
 // available=(name)=>{
@@ -131,46 +176,77 @@ imagedisplay = food => {
 //   return 0 
 //  } 
 closeConfigShow = (closeOnEscape, closeOnDimmerClick,name) => () => {
-  this.setState({ closeOnEscape, closeOnDimmerClick, open: true ,itemsel:name})
-  console.log(this.itemsel);
-  
+  this.setState({ closeOnEscape, closeOnDimmerClick, open: true ,itemsel:name})  
 }
+
+
+
+stock = async (name)=>{
+  // console.log("1 inside");
+  
+   return fetch(`http://127.0.0.1:8000/api/Goods/duplicate/?name=${name}`,{
+    method : "Get",
+    headers : {
+      'Content-Type':'application/json',
+      'Authorization' : `Token ${this.state.token}`
+    }
+  }).then( resp => resp.json() )
+  .then(res => { 
+    return res.count;
+  });
+    // this.setState({  count : res.count})})
+  // console.log(count);
+}
+
 
 close = () => this.setState({ open: false })
 
-componentDidMount(){
-  
+async UNSAFE_componentWillMount(){
+
+  const goods = _.uniqBy(this.props.list, 'name');
+
+  for (const food of goods) {
+    // get the count
+    let count = await this.stock(food.name);
+    // console.log(count);
+    let stock = food.stock;
+    count = count + stock ;
+    food['count'] = count;
+    // console.log(food);
+    this.setState({updatedList:[...this.state.updatedList,food]})
+  }
 }
-  render() {
+render() {
     // this.state.flist.map(item => {
     //   if (item.type=== "Food"){
     //     return (this.setState({plist:[...this.state.plist,item] }))
     //   }
     // })
-
+   
     
+      // console.log(this.state.updatedList);
+      
     const orderclicked =()=>{
-      console.log("ksgdf,ksjdgf");
+      // console.log("ksgdf,ksjdgf");
       let done=<Order/>
       return done
     }
     
-
     const { open, closeOnEscape, closeOnDimmerClick } = this.state  
     
     return (
         <Container style={{"width":"1020px"}}>
-        <Segment textAlign="center">
-           <Label attached="top left" size="big" as='a' color='teal' ribbon>
+        <Segment >
+           <Label size="big" as='a' color='teal' ribbon>
                 Foods
                </Label> <span ><Label size="large" pointing='below'>Available Food</Label></span>
             {!this.state.open ? (<Segment raised >
                   <Grid columns={2} centered divided>
-                    <Grid.Row>
-                        { this.props.list.map(food => {   
+                    <Grid.Row >
+                        { this.state.updatedList.map( food => {   
                             return(                    
                             <Grid.Column key={food.id}>
-                              <Segment size="small" onClick={this.closeConfigShow(true, false,food)} piled style={{"width":"450px","height":"140px"}} >
+                              <Segment size="small" onClick={this.closeConfigShow(true, false,food)} piled style={{"width":"450px","height":"160px"}} >
                               <Grid columns='two'>
                               <Grid.Column width={6}>
                                   <Image rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(food.name)}/>
@@ -178,11 +254,12 @@ componentDidMount(){
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
                                 <Label>Price : $ {food.price} </Label><br/>
-                                <Button primary onClick={this.closeConfigShow(true, false,food)} floated='right'>
+                               <Label>Available Stock :  {food.count} </Label><br/>
+                               <Button primary onClick={this.closeConfigShow(true, false,food)} floated='right'>
                                         Order
                                       <Icon name='right chevron' />
                                       </Button>
-                                      <Label>Available Stock : </Label>
+                                
                                </Grid.Column>
                                 </Grid>
                               </Segment>
@@ -213,7 +290,8 @@ componentDidMount(){
             <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
             <Label><Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
             <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
-            <br/><Label>Available in :</Label><Label> loading........</Label><br/>
+           
+            <br/><Label>Available in : {this.state.itemsel.count}</Label><br/>
             {this.state.instock?(<Button onClick={orderclicked}
               positive
               floated = "right">Order</Button> ):(<Button onClick={orderclicked}
@@ -228,7 +306,7 @@ componentDidMount(){
         </Segment>
         </div>)} 
           </Segment>
-          
+        {console.log(this.state.goods)}
         
       </Container>
     )

@@ -1,19 +1,22 @@
 import React,{Component} from 'react'
-import { Dropdown, Message,Label, Divider,Input } from 'semantic-ui-react'
+import { Message,Modal,Label, Divider,Input,Form,Button,Select,Segment,FormGroup, Container, ModalHeader, ModalContent, ModalActions } from 'semantic-ui-react'
 ///import home from './home'
 //import Combobox from 'react-widgets/lib/Combobox'
 import { withCookies } from 'react-cookie';
 
 
 class Login extends Component{
-    state = {
+    constructor(props){
+    super(props);
+    this.state = {
         credentials:{   
             username:"",
-            password:""
+            password:"",
+            email :""
         },
         signupdetails:{
             user_id:"",
-            Gender :"",
+            gender :"",
             type:"",
             phone_no:"",
             address:"",
@@ -26,9 +29,11 @@ class Login extends Component{
         isloginview : true,
         erro1r : false,
         inputuser : true,
-        inputpass : true
+        inputpass : true,
+        CP:"",
     }
-
+    // this.gender= this.gender.bind(this);
+    }
     findtype = token =>{
         fetch('http://127.0.0.1:8000/api/userdetails/',{
         method: 'POST',
@@ -63,7 +68,18 @@ class Login extends Component{
                     window.location.href = '/admin'
                 }
       }
-    inputchanged = event =>{
+
+    //   gender(event){
+    //     // console.log(event.target.value);
+        
+    //     let value = event.target.value 
+    //     console.log(value);
+        
+    //     this.setState({signupdetails: { gender : value  }})
+    //     console.log(this.state.signupdetails);
+    //   }
+
+    inputchanged = event =>{        
         let cred = this.state.credentials;
         cred[event.target.name] = event.target.value;
         this.setState({credentials: cred});
@@ -79,10 +95,19 @@ class Login extends Component{
 
     signupchange = event =>{
         let cred = this.state.signupdetails;
+        console.log(cred);
+        console.log(event.target.value);
         cred[event.target.name] = event.target.value;
         this.setState({signupdetails : cred});
+        console.log(this.state.signupdetails);
+        
     }
 
+    confirm = event => {
+        this.setState({CP : event.target.value})
+        console.log(this.state.CP);
+        
+    }
     
     loginform = event =>{
         if (this.state.credentials.username === ""){
@@ -102,7 +127,7 @@ class Login extends Component{
         //console.log(res.body);
         if(res.ok) {
             const response = await res.json();
-            //console.log(response)
+            console.log(response)
             this.props.cookies.set('mr_user',response.data)            
             this.findtype(response.data.user_id)
         }else {this.setState({erro1r : true});}})
@@ -114,22 +139,38 @@ class Login extends Component{
     signuform = evnet => {
        this.setState({issignup: true})
     }
-    signup = event => {
+
+    fullsignup = () =>{
+    const user=()=>{
         fetch('http://127.0.0.1:8000/api/user/',{
             method:'POST',
             headers: {'content-type':'application/json'},
             body:JSON.stringify(this.state.credentials)
         }).then(resp => resp.json())
-        .then(res => {
-            console.log(res.username)
-        }
-
-        )
-        .catch(
-            err=> this.home()
-        )
-
+        .then(res => { this.setState({signupdetails:{user_id : res.user_id}})
+        console.log(this.state.signupdetails);
+        })
+        .catch( err=> console.log(err) )}
+    
+    const profile=()=> {
+        console.log("came");
+        fetch('http://127.0.0.1:8000/api/profile/',{
+            method:'POST',
+            headers: {'content-type':'application/json',
+                // 'Authorization' : `Token ${this.state.token}`
+            },
+            body:JSON.stringify(this.state.signupdetails)
+        }).then(resp => resp.json())
+        .then(res => {console.log(res.usertype)})
+        .catch( err=> console.log(err))
     }
+    user();     
+    profile();
+    console.log(this.state.signupdetails);
+    console.log(this.state.credentials);
+    
+    
+}
     
     home = () =>{
         window.location.href="/"
@@ -144,14 +185,18 @@ class Login extends Component{
         // if(isload){
         //     window.location.href = '/home'
         // }
+        // const options = [{ text:"Male", value: 'male'},
+        // { text:"Female", value: 'female'},
+        // { text:"Other", value: 'other'}]  
         return (
 
-                <div >
-                <div className = " ui segment Widthform" >
-                {this.state.isloginview ? (<form className = "ui form">                
-                    <h1 className = "ui segment " style = {{backgroundColor : 'grey' , color : "white" , textAlign : "center"}}>
-                        Login 
-                    </h1>
+                <div className="container" >
+                <Modal open dimmer style={{minWidth:"300px",height:"500px",minHeight:"400px",marginBottom:"10%",marginTop:"5%",marginLeft : "20%" ,marginRight:"25%",padding:"20px"}}>
+                {this.state.isloginview ? (<form style={{width:'100%'}} className = "ui form">                
+                    <ModalHeader style={{height:"50px" ,marginTop : "5%"}}>
+                    <h1 className = "ui segment " style = {{ backgroundColor:"DarkGrey", color : "black" , textAlign : "center" ,font: "small-caps bold 20px/0 serif"}}>                        Login 
+                    </h1></ModalHeader>
+                    <ModalContent style={{paddingLeft : "20px",paddingRight:"20px"}}>
                     {this.state.erro1r ? (
                             <Message negative>
                                <Message.Header>Account not found </Message.Header>
@@ -163,55 +208,139 @@ class Login extends Component{
                                                     Please enter a value
                                                 </Label>): (<div></div>)}
                     <br/><Input placeholder = 'username'
-                    name = "username" type = "text" value={this.state.credentials.username} onChange={this.inputchanged}/>
+                    name = "username" fluid type = "text" value={this.state.credentials.username} onChange={this.inputchanged}/>
                     <br/>
                     <span>password</span><br/>
                     {!this.state.inputpass ? (<Label basic color='red' pointing='below'>
                                                     Please enter a value
                                                 </Label>): (<div></div>)}
-                    <input className = "Input" name = "password" type = "password" value = {this.state.credentials.password} onChange={this.inputchanged}/><br/>
-                    <button className="ui button" onClick ={this.loginform}> Login </button>
+                    <Input fluid placeholder = 'Password'  name = "password" type = "password" value = {this.state.credentials.password} onChange={this.inputchanged}/><br/>
+                    </ModalContent>
+                    <ModalActions style={{paddingLeft:"20px",paddingRight:"20px"}}>
+                    <button className="ui button primary" onClick ={this.loginform}> Login </button>
                     <Divider horizontal>Or</Divider>
-                    <p onClick={this.istoggleview}>
+                    <a style={{float:"left"}} onClick={this.istoggleview}>
                         Create Account
-                    </p><br/>
-                   
+                    </a><br/>
+                    </ModalActions>
                     </form>
-                    ): (<form className = "ui form ">
-                    <h1> Signup </h1>
-                    <span>Username</span><br/>
-                    <input className = "Input" name = "username" type = "text" value = {this.state.credentials.username} onChange= {this.inputchanged} /><br/>
-                    <span>password</span><br/>
-                    <input className = "Input" name = "password" type = "password" value = {this.state.credentials.password} onChange= {this.inputchanged}/><br/>
-                    <span>Gender</span>
-
-                    <span>Type</span><br/>
-                    <Dropdown
-                        placeholder='Type'
-                        value = {this.state.credentials.type}
-                        onChange= {this.type}
-                        fluid
-                        search
-                        selection
-                        options={[{ key : '1', text: 'Customer' },{ key : '2', text: 'Seller' }]}
-                    /><br/>
-                    <span>Address</span><br/>                    
-                    <input className = "Input" placeholder="address" name = "address" type = "text" value = {this.state.signupdetails.address} onChange= {this.signupchange} /><br/>
-                    <span>City</span><br/>
-                    <input className = "Input" name = "city" type = "text" value = {this.state.signupdetails.city} onChange= {this.signupchange} /><br/>
-                    <span>Country</span><br/>
-                    <input className = "Input" name = "county" type = "text" value = {this.state.signupdetails.country} onChange= {this.signupchange} /><br/>
-                    <span>Phone_no</span><br/>
-                    <input className = "Input" name = "phone_no" type = "text" value = {this.state.signupdetails.phone_no} onChange= {this.signupchange} /><br/>
-                    <button className="ui button">create account</button>
-                    <p onClick = {this.istoggleview}>
-                        Back
-                    </p>               
-                </form>)}
-                <button className="ui button" onClick= {this.home}>Home</button>
-                </div>
-                </div>  
-               
+                    ): (<Segment style={{width:'70%'}}>
+                        <h1 className = "ui segment " style = {{backgroundColor : 'grey' , color : "white" , textAlign : "center"}}>
+                        Signup Form 
+                    </h1>
+                        <Divider/>
+                        <Form style={{width:"100%"}}>
+                      <Form.Group widths='equal'>
+                        <Form.Field 
+                        placeholder = 'username'
+                          type="text"
+                          name='username'
+                          control={Input}
+                          label='Username'
+                          onChange={this.inputchanged}
+                          value={this.state.credentials.username}
+                        />
+                        <Form.Field
+                                    name='type'
+                                    control={Select}
+                                    placeholder="type"
+                                    options={[{ text:"seller", value: 'seller' },
+                                            { text:"buyer", value: 'buyer'},
+                                           ]}
+                                    label={{ children: 'Type', htmlFor: 'form-select-control-gender' }}
+                                    value={this.state.signupdetails.type}
+                                    onChange={this.signupchange}
+                                />
+                                
+                                {/* <Dropdown 
+                                    name="gender"
+                                    placeholder='gender'
+                                    onChange={this.signupchange}
+                                    selection
+                                    value={this.state.signupdetails.gender}
+                                    options={ [{ text: 'male', value: 'male'},
+                                                { text: 'Female', value: 'Female'},
+                                                { text: 'Other', value: 'Other'},]}
+                                /> */}
+                        
+                        <select label = "gender" className="ui selection " name="gender" value={this.state.signupdetails.gender} onChange={this.signupchange}>
+                            <option value="N/A">gender</option>
+                            <option value="male">male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                        </Form.Group><Form.Group widths={"equal"} >
+                        <Form.Field 
+                            name='email'
+                            control={Input}
+                            label='Email'
+                            placeholder="Email"
+                            onChange={this.inputchanged}
+                            value={this.state.credentials.email}      
+                        /> 
+                        <Form.Field width ={10}
+                            name='phone_no'
+                            label='Phone No.'
+                            control={Input}
+                            placeholder="Phone no"
+                            onChange={this.signupchange}
+                            value={this.state.signupdetails.phone_no}      
+                        /></Form.Group>
+                        <FormGroup widths={"equal"}>
+                        <Form.Field
+                            name='address'
+                            label="Address"
+                            placeholder="Address"
+                            control={Input}
+                            onChange={this.signupchange}
+                            value={this.state.signupdetails.address}
+                        />
+                        <Form.Field
+                            name='city'
+                            label="City"
+                            placeholder="City"
+                            control={Input}
+                            onChange={this.signupchange}
+                            value={this.state.signupdetails.city}
+                        />
+                        <Form.Field
+                            name='country'
+                            label="Country"
+                            placeholder="Country"
+                            control={Input}
+                            onChange={this.signupchange}
+                            value={this.state.signupdetails.country}
+                        /></FormGroup>
+                    <FormGroup>
+                        <Form.Field
+                            name="password"
+                            label ="Password"
+                            placeholder = "Enter Password"
+                            control = {Input}
+                            type = "password"
+                            value={this.state.credentials.password}
+                            onChange={this.inputchanged}
+                        />
+                        <Form.Field
+                            name="confirm password"
+                            label="Confirm Password"
+                            placeholder="re-enter password"
+                            type ="password"
+                            control={Input}
+                            onChange={this.confirm}
+                        />
+                    </FormGroup>
+                    <Divider></Divider>
+                <Container>
+                <Button floated="right" onClick={this.fullsignup}>Signup </Button>
+                    <span style = {{'color':"blue"}} > <u>I already have Account?</u></span>
+                </Container>
+                </Form></Segment>)}
+                <button className="ui button primary" style={{float:"right",marginTop:"0px" }} onClick= {this.home}>Home</button>
+                <br/><br/>
+                <Divider/>
+            </Modal>
+        </div>       
         )
     }
 }

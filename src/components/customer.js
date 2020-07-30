@@ -7,6 +7,7 @@ import Fuels from './Fuels';
 import Grocery from './grocery';
 import Home from './home';
 import Itemdisplay from './itemdisplay'
+// import { wait } from '@testing-library/react';
 
 class admin extends Component {
     constructor (props){
@@ -35,7 +36,9 @@ class admin extends Component {
             }
           }).then(resp => resp.json())
           .then(res =>{ this.setState({goods:res})
-                        this.findfood()  })
+                        this.findfood() 
+                    
+                     })
     }
 
     //handleItemClick = (e, { name }) => this.setState({ menuactiveItem: name })
@@ -70,20 +73,24 @@ class admin extends Component {
           )
         const { menuactiveItem } = this.state
         const displayform = () => {
+            
+            // console.log(token.token);
+
+            
             if(this.state.activeform === "home"){
-                return <Home food={this.state.food1} fuel={this.state.fuel1} grocery={this.state.veggies1} others={this.state.other1}/>
-            }else if(this.state.activeform === "food"){
-                return( <Food user={this.state.currnt_user.to1ken} list = {this.state.food1}/>)
+                return <Home usertype = {"customer"} food={this.state.food1} fuel={this.state.fuel1} grocery={this.state.veggies1} others={this.state.other1}/>
+            }else if(this.state.activeform === "food"){             
+                return( <Food usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.food1}/>)
              }else if (this.state.activeform === "fuel") {
-                 return( <Fuels list = {this.state.fuel1}/>)
+                 return( <Fuels usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.fuel1}/>)
              }else if (this.state.activeform === "grocery"){
-                 return(<Grocery list = {this.state.veggies1}/>)
+                 return(<Grocery  usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.veggies1}/>)
             }else if (this.state.activeform === "others") {
-                 return(<Others list = {this.state.other1}/>)
+                 return(<Others usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.other1}/>)
             }else if (this.state.activeform === "friends") {
-                 return(<Itemdisplay list = {this.state.other1}/>)
+                 return(<Itemdisplay usertype = {"customer"} list = {this.state.other1}/>)
             }else if (this.state.activeform === "profile") {
-                window.location.href = '/profile'
+                window.location.href = `/profile/${this.state.currnt_user.user_id}`
             }
         }
         return (<React.Fragment>
@@ -104,16 +111,7 @@ class admin extends Component {
                                 <Dropdown.Item onClick={this.formsel} name = "others">Others</Dropdown.Item>
                             </Dropdown.Menu>
                     </Dropdown>
-                    <Menu.Item
-                        name='friends'
-                        active={menuactiveItem === 'friends'}
-                        onClick={this.formsel}
-                    />
-                    <Menu.Item
-                        name='Users'
-                        active={menuactiveItem === 'Users'}
-                        onClick={this.formsel}
-                    />
+                    
                     <Menu.Menu position='right'>
                         <Menu.Item
                             name="Cart"
