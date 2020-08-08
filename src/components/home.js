@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-// import _ from 'lodash'
+
 import Darkfantasy from './images/darkfantasy-img.jpg';
 import Oreo from './images/oreo.jpeg';
 import Donuts from './images/donuts-img.jpg';
@@ -14,6 +14,7 @@ import Food from './Food';
 import Others from './others';
 import Fuels from './Fuels';
 import Grocery from './grocery';
+import { Link } from 'react-router-dom';
 // import Home from './home';
 // import Itemdisplay from './itemdisplay'
 import { withCookies } from 'react-cookie';
@@ -31,6 +32,7 @@ export default  withCookies (class home extends Component {
       itemsel:"",
       food3:this.props.food,
       form:true,
+      goods: {},
       admin: false,
       customer:true,
       currnt_user:{
@@ -98,6 +100,11 @@ export default  withCookies (class home extends Component {
   //     return (Water)
   //   }
   // }
+
+  updategoods() {
+    let response = {show : false , product : this.state.itemsel, user : "admin"}
+    this.props.cookies.set('goods',response) 
+  }
   imagedisplay = food =>{
     switch (food.name) {
       case "Oreo":
@@ -171,16 +178,14 @@ export default  withCookies (class home extends Component {
             if(i<3){
             return(
               <Grid.Column key={food1.id}>
-              <Card onClick={this.closeConfigShow(true, false,food1)} style={{"height":"320px"}}>
+              <Card onClick={this.closeConfigShow(true, false,food1)} style={{"height":"auto"}}>
                 <Image src={this.imagedisplay(food1)} centered style = {{"height":"180px"}} wrapped ui={false} />
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
                   <Label>Price : $ {food1.price} </Label><br/><br/>
                   
-                  <Button floated="right" >buy</Button>
-                </Card.Content>
-                <Card.Content extra>
+                  {!this.state.admin ?(<Button floated="right" >buy</Button>):""}
                 </Card.Content>
               </Card>
               </Grid.Column>
@@ -200,16 +205,14 @@ export default  withCookies (class home extends Component {
             if(i<3){
             return(
               <Grid.Column key={food1.id}>
-              <Card onClick={this.closeConfigShow(true, false,food1)} style={{"height":"360px"}}>
+              <Card onClick={this.closeConfigShow(true, false,food1)} style={{"height":"auto"}}>
                 <Image src={this.imagedisplay(food1)}  style = {{"height":"220px"}}  ui={false} />
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
                   <Label>Price : $ {food1.price} </Label><br/><br/>
                   
-                  <Button floated="right" >buy</Button>
-                </Card.Content>
-                <Card.Content extra>
+                  {!this.state.admin ?(<Button floated="right" >buy</Button>):""}
                 </Card.Content>
               </Card>
               </Grid.Column>
@@ -229,19 +232,16 @@ export default  withCookies (class home extends Component {
             if(i<3){
             return(
               <Grid.Column  key={food1.id}>
-              <Card onClick={this.closeConfigShow(true, false,food1)} style={{"height":"360px"}}>
+              <Card onClick={this.closeConfigShow(true, false,food1)} style={{"height":"auto"}}>
                 <Image src={this.imagedisplay(food1)} centered bordered rounded style = {{"height":"220px"}}  ui={false} />
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
                   <Label>Price : $ {food1.price} </Label><br/><br/>
                   
-                  <Button floated="right" >buy</Button>
-                </Card.Content>
-                <Card.Content extra>
+                  {!this.state.admin ?(<Button floated="right" >buy</Button>):""}
                 </Card.Content>
               </Card>
-             
               </Grid.Column>
             )}else return("")})
           }  
@@ -259,16 +259,14 @@ export default  withCookies (class home extends Component {
             if(i<3){
             return(
               <Grid.Column  key={food1.id}>
-              <Card onClick={this.closeConfigShow(true, false,food1)} style={{"height":"360px"}}>
+              <Card onClick={this.closeConfigShow(true, false,food1)} style={{"height":"auto"}}>
               <Image rounded size="small" centered style={{"height":"220px"}} bordered src={this.imagedisplay(food1)} />
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
                   <Label>Price : $ {food1.price} </Label><br/><br/>
                 
-                  <Button color="blue" floated="right" >buy</Button>
-                </Card.Content>
-                <Card.Content extra>
+                  {!this.state.admin ?(<Button color="blue" floated="right" >buy</Button>):""}
                 </Card.Content>
               </Card>
               </Grid.Column>
@@ -278,19 +276,19 @@ export default  withCookies (class home extends Component {
         </Segment>
         </Segment>
         </Container>):(<div>
-        <Button circular onClick={this.reload}>
+        {this.state.currnt_user.usertype === "customer" ?<Button circular onClick={this.reload}>
         <Icon name='arrow alternate circle left outline' size='large' /> Back
-        </Button>
+        </Button>:""}
         {(() => { 
         switch (this.state.display) {
           case "food":               
-            return( <Food user={this.state.currnt_user.to1ken} list ={this.props.food}/> );
+            return( <Food user={this.state.currnt_user.to1ken} list ={this.props.food} usertype={this.state.currnt_user.usertype}/> );
           case "fuel":   
-            return( <Fuels user={this.state.currnt_user.to1ken} list ={this.props.fuel}/> );
+            return( <Fuels user={this.state.currnt_user.to1ken} list ={this.props.fuel} usertype={this.state.currnt_user.usertype}/> );
           case "grocery":   
-            return( <Grocery user={this.state.currnt_user.to1ken} list ={this.props.grocery}/> );
+            return( <Grocery user={this.state.currnt_user.to1ken} list ={this.props.grocery} usertype={this.state.currnt_user.usertype}/> );
           case "others":   
-            return( <Others user={this.state.currnt_user.to1ken} list ={this.props.others}/> );
+            return( <Others user={this.state.currnt_user.to1ken} list ={this.props.others} usertype={this.state.currnt_user.usertype}/> );
           default:
               return console.log("error");
         }
@@ -319,21 +317,23 @@ export default  withCookies (class home extends Component {
             <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
             <Label><Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
             <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
-            
+            <Label> Location : {this.state.itemsel.location} </Label>
+            {/* <br/><Label>Available in : {this.state.itemsel.count}</Label><br/> */}
             </Grid.Column>
             </Grid>
             </Modal.Content>
             <Modal.Actions>
             {this.state.admin ?(<div>
               <Button negative onClick = {() => this.handleDelete( this.state.itemsel.id)}>DELETE</Button>
-              <Button >Edit</Button>
+              <Link to={{pathname:`/seller/${this.state.currnt_user.user_id}/addgoods`}}><Button onClick= {()=> {this.updategoods()}} positive>Edit</Button></Link>
               </div>
-            ): (<Button floated="right">Add to Cart</Button>)}
+            ): (<div>
+              {/* <Button floated="right">Add to Cart</Button> */}
             {this.state.instock?(<Button 
               positive
               floated = "right">Order</Button> ):(<Button 
                 basic color='red'
-              floated = "right">Out of Stock</Button> )}
+              floated = "right">Out of Stock</Button> )}</div>)}
             
             
             </Modal.Actions>

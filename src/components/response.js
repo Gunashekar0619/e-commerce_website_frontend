@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 class Response extends Component{
   state =  {
        dispaly: this.props.dispaly,
+       user : this.props.user
   }
   render() {  
     return(<div>
@@ -16,7 +17,7 @@ class Response extends Component{
     </p>
     </Modal.Content>
     <Modal.Actions>
-        <Link to="/seller"><Button color='green' inverted>
+        <Link to={`/${this.state.user}`}><Button color='green' inverted>
             <Icon name='checkmark' /> Okey
         </Button></Link>
     </Modal.Actions>

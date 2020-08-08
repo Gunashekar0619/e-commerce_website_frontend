@@ -84,7 +84,8 @@ class Food extends Component {
         instock:true,
         uprate:"",
         count:0,
-        userid:this.props.userid
+        userid:this.props.userid,
+        user:{}
     } 
   }
    
@@ -100,7 +101,7 @@ class Food extends Component {
         method: 'POST',
         headers: {
             'Content-Type':'application/json',
-            'Authorization' : `Token ${this.state.user}`
+            'Authorization' : `Token ${this.props.user}`
         },
         body: JSON.stringify({stars : rating })
         }).then( resp => this.getDetails())
@@ -128,6 +129,10 @@ class Food extends Component {
         .catch(error => console.log(error))
 }
 
+componentDidMount= ()=>{
+
+
+}
 imagedisplay = food =>{
   switch (food) {
     case "Oreo":
@@ -192,7 +197,7 @@ close = () => this.setState({ open: false })
 
 addgoods(){
   
-  let response = {show: true}
+  let response = {show: true,user:"seller"}
   this.props.cookies.set('goods',response)   
 }
 render() {
@@ -235,7 +240,7 @@ render() {
                 <Link to={{pathname:`/product/${food.id}`,history:{page1}}}><h2>{food.name} </h2></Link>
                 <Label>Price : $ {food.price} </Label><br/>
                 <Label>Available Stock :  {food.stock} </Label><br/>
-                <Link to={{pathname:`/product/${food.id}`,history:{page1}}}><Button primary floated='right'>
+                <Link to={{pathname:`/product/${food.id}`,history:{page1}}}><Button primary floated='right' >
                   View Details
                   <Icon name='right chevron' />
                 </Button></Link>

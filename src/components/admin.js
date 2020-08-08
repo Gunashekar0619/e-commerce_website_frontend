@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
 import {Label, Menu ,Dropdown, Icon, Grid, GridColumn, Segment, Container } from 'semantic-ui-react'
 import { withCookies } from 'react-cookie';
 import Food from './Food';
@@ -35,6 +36,7 @@ class admin extends Component {
             showgoods:false,
             showhome:true,
             showuser:false,
+            updatedList:[],
             currnt_user:{
               to1ken : token.token,
               user_id : token.user_id,
@@ -42,6 +44,22 @@ class admin extends Component {
           };  
     }
     
+    async UNSAFE_componentWillMount(){
+
+        const goods = _.uniqBy(this.props.list, 'name');
+      
+        for (const food of goods) {
+          // get the count
+          let count = await this.stock(food.name);
+          // console.log(count);
+          let stock = food.stock;
+          count = count + stock ;
+          food['count'] = count;
+          // console.log(food);
+          this.setState({updatedList:[...this.state.updatedList,food]})
+        }
+    }
+
     componentDidMount() { 
         fetch('http://127.0.0.1:8000/api/Goods/',{
             method: 'GET',
@@ -145,7 +163,7 @@ class admin extends Component {
                  return(<Others usertype = {"admin"} list = {this.state.other1} token={this.state.currnt_user.to1ken}/>)
             }
         }
-        console.log(this.state.seller.length);
+
         return (
         <React.Fragment  >
             <div className="admin_background">
@@ -200,7 +218,8 @@ class admin extends Component {
             active={activeItem === 'all'}
             onClick={this.handleItemClick}
             >
-            <Label color='teal'></Label>
+            {this.state.activeItem === 'all' ? 
+            <Label color='teal'>{this.state.goods.length}</Label>:<Label>{this.state.goods.length}</Label>}
             ALL
             </Menu.Item>
 
@@ -210,7 +229,8 @@ class admin extends Component {
             active={activeItem === 'food'}
             onClick={this.handleItemClick}
             >
-            <Label color='teal'></Label>
+            {this.state.activeItem === 'food' ? 
+            <Label color='teal'>{this.state.food1.length}</Label>:<Label>{this.state.food1.length}</Label>}
             Foods
             </Menu.Item>
 
@@ -220,17 +240,19 @@ class admin extends Component {
             active={activeItem === 'fuels'}
             onClick={this.handleItemClick}
             >
-            <Label></Label>
+            {this.state.activeItem === 'fuels' ? 
+            <Label color='teal'>{this.state.fuel1.length}</Label>:<Label>{this.state.fuel1.length}</Label>}
             Fuels
             </Menu.Item>
 
             <Menu.Item
             onClick={this.formsel}
             name='grocery'
-            active={activeItem === 'frocery'}
+            active={activeItem === 'grocery'}
             onClick={this.handleItemClick}
             >
-            <Label></Label>
+            {this.state.activeItem === 'grocery' ? 
+            <Label color='teal'>{this.state.veggies1.length}</Label>:<Label>{this.state.veggies1.length}</Label>}
             Grocery
             </Menu.Item>
             <Menu.Item
@@ -239,7 +261,8 @@ class admin extends Component {
             active={activeItem === 'others'}
             onClick={this.handleItemClick}
             >
-            <Label></Label>
+            {this.state.activeItem === 'others' ? 
+            <Label color='teal'>{this.state.other1.length}</Label>:<Label>{this.state.other1.length}</Label>}
             Others
             </Menu.Item>
         </Menu>

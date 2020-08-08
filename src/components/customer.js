@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Menu ,Responsive,Dropdown, Icon,Divider } from 'semantic-ui-react'
+import { Menu ,Responsive,Dropdown, Icon,Divider,Segment,Container } from 'semantic-ui-react'
 import { withCookies } from 'react-cookie';
 import Food from './Food';
 import Others from './others';
@@ -45,14 +45,14 @@ class admin extends Component {
     
     findfood=()=>{
         this.state.goods.map(item =>{
-            if (item.type === "food"){
+            if (item.type === "Food"){
             return(
                 this.setState({food1: [...this.state.food1,item]})
             )
-            }else if(item.type === "grocesy"){
+            }else if(item.type === "Grocery"){
                 return(
                     this.setState({veggies1: [...this.state.veggies1,item]})
-                )}else if (item.type === "fuel"){
+                )}else if (item.type === "Fuel"){
                    return ( this.setState({fuel1: [...this.state.fuel1,item]}))
                 } else return(this.setState({other1 : [...this.state.other1,item]}))
         })
@@ -94,9 +94,11 @@ class admin extends Component {
             }
         }
         return (<React.Fragment>
-            <div className =" container  " >
-                <Responsive>
-                    <Menu  pointing secondary >
+            <div style = {{backgroundColor :"black", width:"100%", position :"fixed",zIndex:1 }}>
+            <Segment inverted>
+
+            <Container>
+                    <Menu  size = "large" inverted  pointing secondary  >
                     <Menu.Item
                         name='home'
                         active={menuactiveItem === 'home'}
@@ -126,10 +128,10 @@ class admin extends Component {
                         
                     </Menu.Menu>
                     </Menu>
-                    <Divider/>
-                </Responsive>
+                    </Container>
+            </Segment>
             </div> 
-            <div>
+            <div style={{paddingTop:"100px"}}>
                 {displayform()}
             </div>
             </React.Fragment>

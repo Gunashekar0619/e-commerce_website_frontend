@@ -11,11 +11,12 @@ import Petrol from './images/petrol-img.jpg';
 import Onion from './images/onion-img.jpg';
 import Carrot from './images/carrot.jpg';
 import Water from './images/bisleri500ml-img.png';
+import { Link } from 'react-router-dom';
 // // import Food from './Food';
 // import Others from './others';
 // import Fuels from './Fuels';
 // import Grocery from './grocery';
-import Order from './order'
+import Order from './order/order'
 // import Itemdisplay from './itemdisplay';
 import {
   Grid,
@@ -53,8 +54,10 @@ Rating,
 
 class Food extends Component {
   state = {
+    page1:"admin",
     open: false,
       token: this.props.user,
+      usertype : this.props.usertype,
       length: "",
       Item :{
         "id": "",
@@ -63,6 +66,7 @@ class Food extends Component {
         "type": "",
         "price": "",
         "comments": "",
+        "location":"",
         "no_of_ratings": "",
         "avg_ratings": ""
       },
@@ -77,6 +81,16 @@ class Food extends Component {
   }    
 
   contextRef = createRef()
+  
+  handleDelete(id){
+    // const { match : { params } ,history } = this.props;
+    fetch(`http://127.0.0.1:8000/api/Goods/${id}/`,{
+      method : "DELETE",
+      headers : {
+        'Content-Type':'application/json',}
+    }).then( this.close())
+    .catch(err => console.log(err)) 
+  }
 
   handleRate = (e, { rating, maxRating }) =>{
     this.setState({ uprate :{rating, maxRating}})    
@@ -150,13 +164,13 @@ imagedisplay = food =>{
       return (Snickers)
     case "Dairymilk":
       return(Dairym)
-    case "petrol":
+    case "Petrol":
       return(Petrol)
-    case "diseal":
+    case "Diseal":
       return (Diseal)
-    case "onion":
+    case "Onion":
       return (Onion)
-    case "carrot":
+    case "Carrot":
       return (Carrot)
     case "water":
       return (Water)
@@ -164,7 +178,10 @@ imagedisplay = food =>{
       break;
   }}
 
-
+  updategoods() {
+    let response = {show : false , product : this.state.itemsel, user : "admin"}
+    this.props.cookies.set('goods',response) 
+  }
 // available=(name)=>{
 //   const count = _(this.props.food).groupBy('name').values().map(
 // //     (group)=>({...group[0],
@@ -210,7 +227,10 @@ async UNSAFE_componentWillMount(){
     let count = await this.stock(food.name);
     // console.log(count);
     let stock = food.stock;
-    count = count + stock ;
+    if(stock === 0){
+      count = count - 1 ;
+    }else{
+    count = count + stock ;}
     food['count'] = count;
     // console.log(food);
     this.setState({updatedList:[...this.state.updatedList,food]})
@@ -222,7 +242,7 @@ render() {
     //     return (this.setState({plist:[...this.state.plist,item] }))
     //   }
     // })
-   
+    let page1 = this.state.page
     
       // console.log(this.state.updatedList);
       
@@ -246,22 +266,32 @@ render() {
                         { this.state.updatedList.map( food => {   
                             return(                    
                             <Grid.Column key={food.id}>
-                              <Segment size="small" onClick={this.closeConfigShow(true, false,food)} piled style={{"width":"450px","height":"160px"}} >
+                              <Segment size="small" piled style={{"width":"450px","height":"auto"}} >
                               <Grid columns='two'>
                               <Grid.Column width={6}>
-                                  <Image rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(food.name)}/>
+                                  <Image onClick={this.closeConfigShow(true, false,food)} rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(food.name)}/>
                               </Grid.Column>      
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
                                 <Label>Price : $ {food.price} </Label><br/>
                                <Label>Available Stock :  {food.count} </Label><br/>
-                               <Button primary onClick={this.closeConfigShow(true, false,food)} floated='right'>
-                                        Order
-                                      <Icon name='right chevron' />
-                                      </Button>
-                                
+                            <Label>Location : {food.location}</Label>
+                               {/* <Label><Rating icon='star' defaultRating={this.state.food.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label> */}
+                              {/* <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>  */}
                                </Grid.Column>
+                               
                                 </Grid>
+                                <Divider/>
+                               {this.state.usertype === "admin" ? ( <div>
+                                <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button>
+                                </div>): (<div>
+                              {food.count > 0 ?(<Link to={{pathname:`/customer/order/${food.id}`}} ><Button 
+                                positive
+                                floated = "right">Order</Button></Link> ):(<Button 
+                                  basic color='red'
+                                floated = "right">Out of Stock</Button> )}
+                                <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button></div>)}
+                                <br/><br></br>
                               </Segment>
                               <Divider/>
                             </Grid.Column>)
@@ -270,7 +300,7 @@ render() {
             </Segment> ):(<div>
             <Segment raised >
             <Modal
-            style={{"width":"600px","height":"500px"}}
+            style={{ "width":"600px","height":"330px" , marginLeft : "25%", marginTop : "10%"}}
           open={open}
           closeOnEscape={closeOnEscape}
           closeOnDimmerClick={closeOnDimmerClick}
@@ -282,7 +312,7 @@ render() {
           <Modal.Content>
               <Grid columns={2} style={{"bordercolor":"red"}}>
                 <Grid.Column width={5}>     
-            <Image rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(this.state.itemsel.name)} />
+            <Image rounded size="small" style={{"height":"100px"}} bordered src={this.imagedisplay(this.state.itemsel.name)} />
             </Grid.Column>
             <Grid.Column>
             <Header>{this.state.itemsel.name}</Header>
@@ -290,24 +320,30 @@ render() {
             <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
             <Label><Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
             <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
-           
             <br/><Label>Available in : {this.state.itemsel.count}</Label><br/>
-            {this.state.instock?(<Button onClick={orderclicked}
-              positive
-              floated = "right">Order</Button> ):(<Button onClick={orderclicked}
-                basic color='red'
-              floated = "right">Out of Stock</Button> )}
-            
-            <Button floated="right">Add to Cart</Button>
+            <Label>Location : {this.state.itemsel.location}</Label>
             </Grid.Column>
             </Grid>
             </Modal.Content>
+            <Modal.Actions>
+            {this.state.usertype === "admin" ?(<div>
+              <Button negative onClick = {() => this.handleDelete( this.state.itemsel.id)}>DELETE</Button>
+              <Link to={{pathname:`/seller/${this.state.itemsel.id}/addgoods`}}><Button onClick= {()=> {this.updategoods()}} positive>Edit</Button></Link>
+              </div>
+            ): (<div><Button floated="right">Add to Cart</Button>
+            {this.state.instock?(<Button 
+              positive
+              floated = "right">Order</Button> ):(<Button 
+                basic color='red'
+              floated = "right">Out of Stock</Button> )}</div>)}
+            
+            </Modal.Actions>
         </Modal>
         </Segment>
-        </div>)} 
+        </div>
+        )} 
           </Segment>
         {console.log(this.state.goods)}
-        
       </Container>
     )
   }

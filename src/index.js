@@ -11,10 +11,12 @@ import Shopkeeper from './components/shopkeeper';
 import Customer from './components/customer';
 import admin from './components/admin';
 import { CookiesProvider } from 'react-cookie';
-import addgoods from './components/seller/addgoods'
+import addgoods from './components/seller/addgoods';
+import Order from './components/order/order';
+import purchase from './components/order/payment'
 
 const routing = (
-  <div>
+  <div className="admin_background">
     <BrowserRouter>
       <CookiesProvider>
         <Route exact path="/seller/:userid/addgoods" component={addgoods}/>
@@ -25,6 +27,8 @@ const routing = (
         <Route exact path="/customer" component={Customer}/>
         <Route exact path="/admin" component={admin}/>
         <Route exact path="/product/:foodid" component={productdetails}/>
+        <Route exact path="/customer/order/:id" component={Order}/>
+        <Route exact path="/customer/purchase/:id/:qty" component={purchase}/>
       </CookiesProvider>
     </BrowserRouter>
   </div>

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Menu from './menu'
 import { withCookies } from 'react-cookie';
 import '../App.css';
+
+
 import {
     // Modal,
     Button,
@@ -293,6 +295,8 @@ class Profile extends Component {
         />
        </FormGroup>
       </Form></Segment>)}
+      
+        
       </Container>
       )
     }

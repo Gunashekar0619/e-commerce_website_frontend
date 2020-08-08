@@ -3,3 +3,9 @@
 [0531/225240.151:ERROR:exception_snapshot_win.cc(98)] thread ID 11448 not found in process
 [0531/225240.151:ERROR:exception_snapshot_win.cc(98)] thread ID 2136 not found in process
 [0614/223343.195:ERROR:file_io.cc(89)] ReadExactly: expected 36, observed 0
+[0802/090138.163:ERROR:settings.cc(320)] Settings magic is not 1129342067
+[0802/095705.919:ERROR:file_io.cc(89)] ReadExactly: expected 36, observed 0
+[0802/120025.974:ERROR:file_io.cc(89)] ReadExactly: expected 36, observed 0
+[0802/132152.509:ERROR:file_io.cc(89)] ReadExactly: expected 36, observed 0
+[0802/133546.498:ERROR:file_io.cc(89)] ReadExactly: expected 36, observed 0
+[0802/160717.558:ERROR:file_io.cc(89)] ReadExactly: expected 36, observed 0

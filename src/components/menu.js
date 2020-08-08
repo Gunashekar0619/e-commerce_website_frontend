@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Menu, Dropdown, Icon, Container } from 'semantic-ui-react'
+import { Menu, Dropdown, Icon, Container ,Segment} from 'semantic-ui-react'
 import {withCookies} from 'react-cookie'
 import { Link } from 'react-router-dom';
 // import Customer from './customer'
@@ -54,8 +54,11 @@ class Menubar extends Component {
         </span>
       )
     return (
+      <React.Fragment  >
+      <div style = {{backgroundColor :"black", width:"100%",zIndex:1 }}>
+      <Segment inverted>
       <Container>
-        <Menu size="huge" pointing secondary>
+        <Menu  size = "large" inverted pointing secondary>
           <Link to={`/${this.props.user}`}><Menu.Item
             name='home'
             active={activeItem === 'home'}
@@ -73,7 +76,7 @@ class Menubar extends Component {
             </Dropdown>
           :""}
           <Menu.Menu position='right'>
-          <Dropdown trigger={trigger} pointing className='link item'>
+          <Dropdown trigger={trigger} style={{"color":"white"}} pointing className='link item'>
                             <Dropdown.Menu>
                                 <Link to={`/profile/${this.state.userid}`}><Dropdown.Item>Profile</Dropdown.Item></Link>
                                 <Dropdown.Item onClick = {this.logoutclicked} >Logout</Dropdown.Item>  
@@ -82,6 +85,9 @@ class Menubar extends Component {
           </Menu.Menu>
         </Menu>
       </Container>
+      </Segment>
+      </div>
+      </React.Fragment>
     )
   }
 }

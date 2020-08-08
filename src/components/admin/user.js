@@ -1,5 +1,5 @@
 import React,{ Component} from 'react';
-import {  Menu,  Grid, GridColumn ,Sticky} from 'semantic-ui-react';
+import {  Menu,  Grid, GridColumn ,Sticky, Modal,Card, Rail } from 'semantic-ui-react';
 // import { Helmet } from 'react-helmet';
 import { withCookies } from 'react-cookie';
 import Userlist from './allusers'
@@ -31,7 +31,7 @@ class User extends Component{
             
         <Grid style={{marginTop : "5%"}} columns="2">
         
-            <GridColumn width="3"> 
+            <GridColumn  width="3"> 
             <Sticky>
                 <Menu  inverted pointing vertical>
                 <Menu.Item
@@ -52,11 +52,10 @@ class User extends Component{
                 </Menu></Sticky>
                 </GridColumn>
             <GridColumn>
-            
             {table()}
             </GridColumn>
+          
         </Grid>
-        
     </div>   
     )
   }

@@ -4,23 +4,28 @@ import Menubar from '../menu'
 import { Link } from 'react-router-dom'
 import { withCookies} from 'react-cookie';
 import Response from "../response"
+import user from '../admin/user';
 
 class Goodsform extends Component {
   constructor(props){
     super(props)
     const form = this.props.cookies.get('goods')
     const user = this.props.cookies.get('mr_user')
-  this.state = { 
+    let location =""
+    this.user(user.user_id,form.show)
+    this.state = { 
+    user_id:user.user_id,
     form : form.show,
+    user : form.user,
     Modal :false,
     dispaly:"",
     product : {
-              
               name :"",
               type :"" ,
               price:"",
               stock:"",
-              owner:user.user_id
+              owner:user.user_id,
+              location:location
             }}
   }
   componentDidMount(){
@@ -30,14 +35,27 @@ class Goodsform extends Component {
   }else {this.setState({form : false})
   let goods = this.props.cookies.get('goods')
   this.setState({product : goods.product})
-
   }
   }
   catch(error){
     console.log(error);
    }
   }
-
+  user(user,form){
+    if (form){
+    fetch(`http://127.0.0.1:8000/api/userdetails/`,{
+      method: 'post',
+      headers: {
+          'Content-Type':'application/json',
+      },
+      body: JSON.stringify({user_id : user })
+      }).then( resp => resp.json())
+      .then ( res => {let a = this.state.product;
+        a.location = res.data.address;
+        this.setState({product:a})}
+      )
+      .catch(error => console.log(error))
+   }}
   inputchanged = event =>{        
     let cred = this.state.product;
     cred[event.target.name] = event.target.value;
@@ -55,7 +73,7 @@ class Goodsform extends Component {
   .then(res => {console.log(res)
                 this.setState({Modal : true , dispaly : "Product Added Successfully"})
                 })
-  .catch( err=> console.log(err))
+  .catch( err=> this.setState({Modal : true , dispaly : "Product not Added Successfully"}))
   }
 
   updateproduct(){
@@ -93,10 +111,10 @@ class Goodsform extends Component {
     
     return (
       <Container>
-        <Menubar present = {()=>this.actform} user = "seller" active={this.state.activeform}/>
+        <Menubar present = {()=>this.actform} user = {this.state.user} active={this.state.activeform}/>
     <Segment  inverted><Header textAlign = "center">{this.state.form ? "Add Products" :"Update Goods"}</Header></Segment>
       <Segment><Form>
-        <Link to= "/seller"><Button circular><Icon size ="large" name = "arrow alternate circle left outline"/>Back</Button></Link><br/><br/><br/>
+        <Link to= {`/${this.state.user}`}><Button circular><Icon size ="large" name = "arrow alternate circle left outline"/>Back</Button></Link><br/><br/><br/>
       <Form.Group widths='equal'>
       <Form.Field>
         <span>Product Name</span>
@@ -137,10 +155,10 @@ class Goodsform extends Component {
           <option>Select Type </option>
         </optgroup>
         <optgroup>
-          <option value="grocery">Grocery</option>
-          <option value="food">Food</option>
-          <option value="fuel">Fuel</option>
-          <option value="other">Others</option>
+          <option value="Grocery">Grocery</option>
+          <option value="Food">Food</option>
+          <option value="Fuel">Fuel</option>
+          <option value="Other">Others</option>
         </optgroup>
       </select>
       </Form.Field>
@@ -183,10 +201,10 @@ class Goodsform extends Component {
       {this.state.form ?
       (<Button onClick={()=>this.addproduct()} positive>Add</Button >):(<Button onClick={()=>this.updateproduct()} positive>Update</Button>)
       }
-      <Link to="/seller"><Button negative>Cancel</Button></Link>
+      <Link to={`/${this.state.user}`}><Button negative>Cancel</Button></Link>
     </Form>
     </Segment>
-    {this.state.Modal? <Response dispaly= {this.state.dispaly}/>:""}
+    {this.state.Modal? <Response dispaly= {this.state.dispaly} user = {this.state.user}/>:""}
     </Container>
   )
     

@@ -109,8 +109,7 @@ class Productinfo extends React.Component {
   }
 
   updategoods() {
-    
-    let response = {show : false , product : this.state.goods}
+    let response = {show : false , product : this.state.goods , user : "seller"}
     this.props.cookies.set('goods',response) 
   }
 

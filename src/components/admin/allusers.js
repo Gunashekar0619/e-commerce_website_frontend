@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table } from 'semantic-ui-react';
+import { Table,Grid,Sidebar, Menu ,Icon,Segment,Checkbox,Header,TransitionablePortal, Divider, Button } from 'semantic-ui-react';
 
 
 export default class userlist extends Component {
@@ -7,6 +7,11 @@ export default class userlist extends Component {
         super(props);
         this.state={
             profiledetails:[],
+            details_form:false,
+            details :"",
+            animation: 'swing down',
+            duration: 500,
+            open: false
         }
     }
 
@@ -19,7 +24,7 @@ export default class userlist extends Component {
                 'Content-Type':'application/json',
             }}).then(res=>res.json())
             .then (res =>{
-                console.log(typeof res.result);
+                // console.log(typeof res.result);
                 this.setState({ profiledetails : res.result})
                 // res.map(user=>{
                 //     this.setState({profileid : [...this.state.profileid,user.user_id]})
@@ -30,106 +35,29 @@ export default class userlist extends Component {
             })
         }
         profile()
-
-        // const credentials=()=>{
-        //     fetch('http://127.0.0.1:8000/api/user/',{
-        //     method:'GET',
-        //     headers:{
-        //         'Content-Type':'application/json',
-        //     }}).then(res=>res.json())
-        //     .then (res =>{
-        //         res.map(user=>{
-        //             this.setState({userid : [...this.state.userid,user.id]})
-        //             return 0
-        //         })
-        //         this.setState({credentials : res})
-        //         userdetails()
-        //     })
-        // }
-        
-        // const userdetails= ()=>{
-           
-        //     this.state.profileid.map(id =>{
-        //         fetch('http://127.0.0.1:8000/api/userdetails/',{
-        //         method:'POST',
-        //         headers:{
-        //             'Content-Type':'application/json',
-        //         },body : JSON.stringify({"user_id":id})
-        //     }).then(res=> res.json())
-        //     .then(res=>{
-        //         this.object = res.data
-        //         // set()
-        //         this.setState({userdetails : [...this.state.userdetails,res.data]});
-                
-        //     })
-        //     return 0 
-        //     })
-            // this.append()
-            // const credentials1=()=>{
-                
-            //         for (let index = 0; index < object.length; index++) {
-            //             const element = object[index];
-            //             fetch(`http://127.0.0.1:8000/api/user/${element.user_id}/`,{
-            //                 method : "Get",
-            //                 headers : {
-            //                 'Content-Type':'application/json',}
-            //             }).then(res=>res.json())
-            //                 .then(res => {
-            //                     // console.log(res.username);
-            //                     object.username = res.username 
-            //                     object.email = res.email
-            //                     console.log(object);
-            //                     set()
-            //                 })
-            //         }     
-                            
-            // }
-            // credentials1()
-            // set =() =>{
-               
-            // }
-        // }
+    }
+    handleClick = () => this.setState((prevState) => ({ open: !prevState.open }))
+    details = (user) =>{
+        this.setState({details : user})
+        this.handleClick()
     }
 
-    // append = () =>{
-    //     console.log("kjda");
-    //     console.log(this.state.userdetails);
-        
-    //     for (let index = 0; index < this.state.userdetails.length; index++) {
-    //         const element = this.state.userdetails[index];
-    //         fetch(`http://127.0.0.1:8000/api/user/${element.user_id}/`,{
-    //             method : "Get",
-    //             headers : {
-    //             'Content-Type':'application/json',}
-    //             }).then(res=>res.json())
-    //             .then(res => {
-    //                 console.log("came");
-    //                 this.state.userdetails.username = res.username 
-    //                 this.state.userdetails.email = res.email
-    //                 console.log(this.state.userdetails);
-    //                 // this.setState({userdetails : [...this.state.userdetails,this.state.userdetails]})
-    //             })
-    //     }    
-    // }
-
+    deleteclick(id){
+      console.log("delete");
+      fetch(`http://127.0.0.1:8000/api/user/${id}/`,{
+          method:'DELETE',
+          headers:{
+              'Content-Type':'application/json',
+          }}).then(console.log("user deleted"))
+          .catch(err => console.log(err))    
+  }
     render() {
-        // console.log(this.state.profileid);
+        const { animation, duration, open } = this.state
         // console.log(this.state.profiledetails);
-        // console.log(this.state.credentials);
-        console.log(this.state.profiledetails);
         let slno = 1;
         
         let length  = this.state.profiledetails.length
         let arra = this.state.profiledetails
-
-        
-        // let TableBody = () =>{
-        //     if(this.state.profiledetails instanceof Array) {
-        //        arra = this.state.profiledetails.map(user=>{                    
-        //            return user;
-        //          })
-        //     }
-        // }
 
         return (
             <div>
@@ -155,7 +83,7 @@ export default class userlist extends Component {
                               
                 <Table.Body>
                 {arra.map(user =>
-                (<Table.Row key={user.user_id}>
+                (<Table.Row key={user.user_id} onClick={()=>this.details(user)} >
                     <Table.Cell>{slno++}</Table.Cell>
                     <Table.Cell>{user.name}</Table.Cell>
                     <Table.Cell>{user.type}</Table.Cell>
@@ -167,9 +95,45 @@ export default class userlist extends Component {
                 </Table.Row>),
             )}
           </Table.Body>
-                
-
             </Table>
+            <TransitionablePortal
+            open={this.state.open}
+            transition={{ animation, duration }}
+          >
+            <Segment
+              style={{
+                left: '40%',
+                position: 'fixed',
+                top: '60px',
+                zIndex: 1000,
+                width : '314px'
+              }}
+            >
+              <Header>{this.state.details.name}</Header>
+              <Divider/>
+              <div className="row">
+                  <div className="column" style={{"width":"50%","paddingLeft":"10px"}}> 
+                    user id     <br/>
+                    Type        <br/>
+                    Gender      <br/>
+                    Ph.No       <br/>
+                    Email       <br/>
+                    Address     <br/>
+                    city        <br/>
+                  </div>
+                  <div className="column">
+                    :&nbsp;{this.state.details.user_id}<br/>
+                    :&nbsp;{this.state.details.type}<br/>
+                    :&nbsp;{this.state.details.gender}<br/>
+                    :&nbsp;{this.state.details.phone_no}<br/>
+                    :&nbsp;{this.state.details.email}<br/>
+                    :&nbsp;{this.state.details.address}<br/>
+                    :&nbsp;{this.state.details.city}<br/>
+                  </div>
+              </div>
+              <Button onClick={()=>this.deleteclick(this.state.details.user_id)} negative>Delete</Button>
+            </Segment>
+          </TransitionablePortal>
             </div>
         )
     }

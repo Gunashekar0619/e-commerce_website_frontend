@@ -3,7 +3,7 @@
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
-  min-height: 800px;
+  min-height: 1000px;
 }
 .head{
   padding-top:20px ;
@@ -28,4 +28,97 @@
   height: auto;
   
   padding-bottom: 0px;
+}
+
+.visa {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 0 no-repeat;
+}
+.mastercard {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -30px no-repeat;
+}
+.amex {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -60px no-repeat;
+}
+.diners {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -90px no-repeat;
+}
+.discover {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -120px no-repeat;
+}
+.shopping {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -150px no-repeat;
+}
+.naranja {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -180px no-repeat;
+}
+.qida {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -210px no-repeat;
+}
+.clubdia {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -240px no-repeat;
+}
+.musicred {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -270px no-repeat;
+}
+.nevada {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -300px no-repeat;
+}
+.tuya {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -330px no-repeat;
+}
+.laanonima {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -360px no-repeat;
+}
+.crediguia {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -390px no-repeat;
+}
+.patagonia {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -410px no-repeat;
+}
+.sol {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -440px no-repeat;
+}
+.cabal {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -470px no-repeat;
+}
+.cencosud {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -500px no-repeat;
+}
+.credimas {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -530px no-repeat;
+}
+.carrefour {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -560px no-repeat;
+}
+.grupar {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -590px no-repeat;
+}
+.wishgift {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -610px no-repeat;
+}
+.unknown {
+  background: url("https://jscardvalidator-mpccmwdwqf.now.sh/cards_sprite_compressed_30.jpg")
+      0 -640px no-repeat;
 }

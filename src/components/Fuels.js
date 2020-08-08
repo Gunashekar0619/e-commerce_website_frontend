@@ -11,7 +11,8 @@ import Donuts from './images/donuts-img.jpg';
 //import Lays from '/images/lays-img.jpg';
 import Snickers from './images/snickers-img.jpg';
 import Dairym from './images/dairymilk-img.jpeg';
-import Order from './order'
+import Order from './order/order'
+import { Link } from 'react-router-dom';
 import {
   Modal,
   Header,
@@ -42,6 +43,7 @@ class Food extends Component {
   state = {
     open:false,
       token: this.props.user,
+      usertype : this.props.usertype,
       length: "",
       Item :{
         "id": "",
@@ -58,6 +60,21 @@ class Food extends Component {
       updatedList: [],
       count:0 
   }    
+
+  updategoods() {
+    let response = {show : false , product : this.state.itemsel, user : "admin"}
+    this.props.cookies.set('goods',response) 
+  }
+
+  handleDelete(id){
+    // const { match : { params } ,history } = this.props;
+    fetch(`http://127.0.0.1:8000/api/Goods/${id}/`,{
+      method : "DELETE",
+      headers : {
+        'Content-Type':'application/json',}
+    }).then( this.close())
+    .catch(err => console.log(err)) 
+  }
 
   stock = async (name)=>{
     // console.log("1 inside");
@@ -98,9 +115,9 @@ componentDidMount(){
   contextRef = createRef()
 
 imagedisplay = food => {
-  if(food.name === "petrol"){
+  if(food.name === "Petrol"){
     return(Petrol)
-  }else if(food.name === "diseal"){
+  }else if(food.name === "Diseal"){
     return (Diseal)
   }else if(food.name === "Donuts"){
     return (Donuts)
@@ -142,23 +159,29 @@ close = () => this.setState({ open: false })
                         { this.props.list.map(food => {   
                             return(                    
                             <Grid.Column key={food.id} >
-                              <Segment size="small" onClick={this.closeConfigShow(true, false,food)}  piled style={{"width":"450px","height":"170px"}} >
+                              <Segment size="small"   piled style={{"width":"450px","height":"auto"}} >
                               <Grid columns='two'>
                               <Grid.Column width={6}>
-                                  <Image rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(food)} />
+                                  <Image onClick={this.closeConfigShow(true, false,food)} rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(food)} />
                               </Grid.Column>      
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
                                 <Label>Price : $ {food.price} </Label><br/>
                                 <Label>Available Stock :  {food.count} </Label><br/>
-                                <Button primary onClick={this.closeConfigShow(true, false,food)} floated='right'>
-                                        Order
-                                      <Icon name='right chevron' />
-                                      </Button>
-                                
-                               
+                                <Label>Location : {food.location}</Label>
                                </Grid.Column>
                                 </Grid>
+                                <Divider/>
+                               {this.state.usertype === "admin" ? ( <div>
+                                <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button>
+                                </div>): (<div>
+                              {food.count > 0 ?(<Button 
+                                positive
+                                floated = "right">Order</Button> ):(<Button 
+                                  basic color='red'
+                                floated = "right">Out of Stock</Button> )}
+                                <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button></div>)}
+                                <br/><br></br>
                               </Segment>
                               <Divider/>
                             </Grid.Column>)                
@@ -168,7 +191,7 @@ close = () => this.setState({ open: false })
                 </Segment> ):(<div>
             <Segment raised >
             <Modal
-            style={{"width":"600px","height":"500px"}}
+            style={{ "width":"600px","height":"330px" , marginLeft : "25%", marginTop : "10%"}}
           open={open}
           closeOnEscape={closeOnEscape}
           closeOnDimmerClick={closeOnDimmerClick}
@@ -180,22 +203,32 @@ close = () => this.setState({ open: false })
           <Modal.Content>
               <Grid columns={2} style={{"bordercolor":"red"}}>
                 <Grid.Column width={5}>     
-            <Image rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(this.state.itemsel)} />
+            <Image rounded size="small" style={{"height":"100px"}} bordered src={this.imagedisplay(this.state.itemsel)} />
             </Grid.Column>
             <Grid.Column>
             <Header>{this.state.itemsel.name}</Header>
             <Label>Type : {this.state.itemsel.type}</Label><br/>
             <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
-            <Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} maxRating={5} />
+            <Label><Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
             <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
             <br/><Label>Available in : {this.state.itemsel.count}</Label><br/>
-            <Button onClick={orderclicked}
-              positive
-              floated = "right">Order</Button> 
-            <Button floated="right">Add to Cart</Button>
+            <Label>Location : {this.state.itemsel.location}</Label>
             </Grid.Column>
             </Grid>
             </Modal.Content>
+            <Modal.Actions>
+            {this.state.usertype === "admin" ?(<div>
+              <Button negative onClick = {() => this.handleDelete( this.state.itemsel.id)}>DELETE</Button>
+              <Link to={{pathname:`/seller/${this.state.itemsel.id}/addgoods`}}><Button onClick= {()=> {this.updategoods()}} positive>Edit</Button></Link>
+              </div>
+            ): (<div><Button floated="right">Add to Cart</Button>
+            {this.state.instock?(<Button 
+              positive
+              floated = "right">Order</Button> ):(<Button 
+                basic color='red'
+              floated = "right">Out of Stock</Button> )}</div>)}
+            
+            </Modal.Actions>
         </Modal>
         </Segment>
         </div>)} 

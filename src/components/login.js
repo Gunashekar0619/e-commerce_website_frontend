@@ -3,6 +3,7 @@ import { Message,Modal,Label, Divider,Input,Form,Button,Select,Segment,FormGroup
 ///import home from './home'
 //import Combobox from 'react-widgets/lib/Combobox'
 import { withCookies } from 'react-cookie';
+import { Link } from 'react-router-dom';
 
 
 class Login extends Component{
@@ -147,8 +148,11 @@ class Login extends Component{
             headers: {'content-type':'application/json'},
             body:JSON.stringify(this.state.credentials)
         }).then(resp => resp.json())
-        .then(res => { this.setState({signupdetails:{user_id : res.user_id}})
-        console.log(this.state.signupdetails);
+        .then(res => { let a = this.state.signupdetails
+            a.user_id = res.id
+            this.setState({signupdetails:a})
+        console.log(res.id);
+        profile()
         })
         .catch( err=> console.log(err) )}
     
@@ -161,13 +165,13 @@ class Login extends Component{
             },
             body:JSON.stringify(this.state.signupdetails)
         }).then(resp => resp.json())
-        .then(res => {console.log(res.usertype)})
+        .then(res => 
+                {this.istoggleview()
+            console.log(this.state.signupdetails)})
         .catch( err=> console.log(err))
     }
     user();     
-    profile();
-    console.log(this.state.signupdetails);
-    console.log(this.state.credentials);
+
     
     
 }
@@ -191,7 +195,7 @@ class Login extends Component{
         return (
 
                 <div className="container" >
-                <Modal open dimmer style={{minWidth:"300px",height:"500px",minHeight:"400px",marginBottom:"10%",marginTop:"5%",marginLeft : "20%" ,marginRight:"25%",padding:"20px"}}>
+                <Modal open dimmer style={{minWidth:"300px",height:"auto",minHeight:"400px",marginBottom:"10%",marginTop:"5%",marginLeft : "20%" ,marginRight:"25%",padding:"20px"}}>
                 {this.state.isloginview ? (<form style={{width:'100%'}} className = "ui form">                
                     <ModalHeader style={{height:"50px" ,marginTop : "5%"}}>
                     <h1 className = "ui segment " style = {{ backgroundColor:"DarkGrey", color : "black" , textAlign : "center" ,font: "small-caps bold 20px/0 serif"}}>                        Login 
@@ -240,7 +244,7 @@ class Login extends Component{
                           onChange={this.inputchanged}
                           value={this.state.credentials.username}
                         />
-                        <Form.Field
+                        {/* <Form.Field
                                     name='type'
                                     control={Select}
                                     placeholder="type"
@@ -250,8 +254,15 @@ class Login extends Component{
                                     label={{ children: 'Type', htmlFor: 'form-select-control-gender' }}
                                     value={this.state.signupdetails.type}
                                     onChange={this.signupchange}
-                                />
+                                /> */}
                                 
+                        <select label = "type" className="ui selection " name = "type"
+                         value = {this.state.signupdetails.type} onChange={this.signupchange}>
+                            <option  value="N/A">Type</option>
+                            <option value="seller">Seller</option>
+                            <option value="Customer">Buyer</option>
+                        </select>
+
                                 {/* <Dropdown 
                                     name="gender"
                                     placeholder='gender'
@@ -263,9 +274,10 @@ class Login extends Component{
                                                 { text: 'Other', value: 'Other'},]}
                                 /> */}
                         
-                        <select label = "gender" className="ui selection " name="gender" value={this.state.signupdetails.gender} onChange={this.signupchange}>
-                            <option value="N/A">gender</option>
-                            <option value="male">male</option>
+                        <select label = "gender" className="ui selection " name = "gender"
+                         value = {this.state.signupdetails.gender} onChange={this.signupchange}>
+                            <option value="N/A">Gender</option>
+                            <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Other</option>
                         </select>
@@ -333,7 +345,7 @@ class Login extends Component{
                     <Divider></Divider>
                 <Container>
                 <Button floated="right" onClick={this.fullsignup}>Signup </Button>
-                    <span style = {{'color':"blue"}} > <u>I already have Account?</u></span>
+                <span onClick={()=>{this.setState({isloginview : true})}} style = {{'color':"blue"}} > <u>I already have Account?</u></span>
                 </Container>
                 </Form></Segment>)}
                 <button className="ui button primary" style={{float:"right",marginTop:"0px" }} onClick= {this.home}>Home</button>

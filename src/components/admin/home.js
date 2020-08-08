@@ -29,7 +29,7 @@ export default class home extends Component {
                             </CardHeader>
                             
                             <CardContent className="count" style={{"fontSize":"70px","padding":"15px"}}>
-                                {this.props.goods_len}
+                                {this.props.alluser}
                             </CardContent>
                             
                             
@@ -43,7 +43,7 @@ export default class home extends Component {
                                 Total Goods
                             </CardHeader>
                             <CardContent className="count" style={{"fontSize":"70px","padding":"15px"}}>
-                                {this.props.alluser}
+                                {this.props.goods_len}
                             </CardContent>
                             <button onClick ={this.goodClicked}>More...</button>
                             </Card>
