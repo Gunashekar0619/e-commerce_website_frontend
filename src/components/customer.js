@@ -7,6 +7,7 @@ import Fuels from './Fuels';
 import Grocery from './grocery';
 import Home from './home';
 import Itemdisplay from './itemdisplay'
+import Transaction from './order/transaction';
 // import { wait } from '@testing-library/react';
 
 class admin extends Component {
@@ -19,7 +20,9 @@ class admin extends Component {
             fuel1:[],
             veggies1:[],
             other1:[],
+            history:false,
             activeform : "home",
+            transactions : [],
             menuactiveItem: 'home',
             currnt_user:{
               to1ken : token.token,
@@ -65,6 +68,34 @@ class admin extends Component {
         window.location.href = '/login'
     }
    
+    closeHistory = () => {
+        this.setState({history :false})
+    }
+
+    history = () => {
+    fetch('http://127.0.0.1:8000/api/ordered/getdata/',{
+        method: 'GET',
+        headers: {
+            // 'Authorization' : `Token ${this.state.currnt_user.to1ken}`
+        }
+      })
+      .then(resp => resp.json())
+      .then(res =>{ this.setState({goods:res.data})
+                    console.log(res);
+                    res.data.map(h => {
+                        if (this.state.currnt_user.user_id === h.user.user_id) {
+                             this.state.transactions.push(h)
+                        }
+                    })
+                    this.setState({history:true})
+                })  
+        .catch(res=>{
+            console.log(res);
+        })      
+        this.setState({history:true})
+        console.log(this.state.transactions)
+    }
+
     render() { 
         const trigger = (
             <span>
@@ -72,11 +103,10 @@ class admin extends Component {
             </span>
           )
         const { menuactiveItem } = this.state
-        const displayform = () => {
-            
-            // console.log(token.token);
 
-            
+         
+
+        const displayform = () => {
             if(this.state.activeform === "home"){
                 return <Home usertype = {"customer"} food={this.state.food1} fuel={this.state.fuel1} grocery={this.state.veggies1} others={this.state.other1}/>
             }else if(this.state.activeform === "food"){             
@@ -121,6 +151,7 @@ class admin extends Component {
                         />
                         <Dropdown trigger={trigger} pointing className='link item'>
                             <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => this.history()}>History</Dropdown.Item>
                                 <Dropdown.Item name='profile' onClick={this.formsel}>Profile</Dropdown.Item>
                                 <Dropdown.Item onClick = {this.logoutclicked} >Logout</Dropdown.Item>  
                             </Dropdown.Menu>
@@ -130,10 +161,13 @@ class admin extends Component {
                     </Menu>
                     </Container>
             </Segment>
+           
             </div> 
             <div style={{paddingTop:"100px"}}>
                 {displayform()}
             </div>
+            {this.state.history ? 
+            <Transaction history = {this.state.history} closeHistory = {this.closeHistory} transactions = {this.state.transactions} /> : "" }
             </React.Fragment>
         )
     }

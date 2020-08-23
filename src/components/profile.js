@@ -54,7 +54,7 @@ class Profile extends Component {
       }).then ( res => res.json())
       .then (res => {
         const d = res.data;
-        console.log(d.profile_id);
+        console.log(d);
         this.setState({profile_id : d.profile_id})
         this.setState({userdetails : d}); 
       })

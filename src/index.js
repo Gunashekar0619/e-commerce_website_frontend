@@ -14,6 +14,7 @@ import { CookiesProvider } from 'react-cookie';
 import addgoods from './components/seller/addgoods';
 import Order from './components/order/order';
 import purchase from './components/order/payment'
+import Response from './components/order/response'
 
 const routing = (
   <div className="admin_background">
@@ -29,6 +30,7 @@ const routing = (
         <Route exact path="/product/:foodid" component={productdetails}/>
         <Route exact path="/customer/order/:id" component={Order}/>
         <Route exact path="/customer/purchase/:id/:qty" component={purchase}/>
+        <Route exact path="/customer/response" component={Response}/>
       </CookiesProvider>
     </BrowserRouter>
   </div>

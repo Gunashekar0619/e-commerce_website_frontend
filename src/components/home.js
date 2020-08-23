@@ -77,29 +77,7 @@ export default  withCookies (class home extends Component {
     }).then( this.close())
     .catch(err => console.log(err)) 
   }
-  // imagedisplay = food => {
-  //   if(food.name === "Oreo"){
-  //     return(Oreo)
-  //   }else if(food.name === "Darkfantasy"){
-  //     return (Darkfantasy)
-  //   }else if(food.name === "Donuts"){
-  //     return (Donuts)
-  //   }else if(food.name === "Snickers"){
-  //     return (Snickers)
-  //   }else if(food.name === "Dairymilk"){
-  //     return(Dairym)
-  //   }else if(food.name === "petrol"){
-  //     return(Petrol)
-  //   }else if(food.name === "diseal"){
-  //     return (Diseal)
-  //   }else if(food.name === "onion"){
-  //     return (Onion)
-  //   }else if(food.name === "carrot"){
-  //     return (Carrot)
-  //   }else if(food.name === "water"){
-  //     return (Water)
-  //   }
-  // }
+
 
   updategoods() {
     let response = {show : false , product : this.state.itemsel, user : "admin"}
@@ -117,15 +95,15 @@ export default  withCookies (class home extends Component {
         return (Snickers)
       case "Dairymilk":
         return(Dairym)
-      case "petrol":
+      case "Petrol":
         return(Petrol)
-      case "diseal":
+      case "Diseal":
         return (Diseal)
-      case "onion":
+      case "Onion":
         return (Onion)
-      case "carrot":
+      case "Carrot":
         return (Carrot)
-      case "water":
+      case "Water":
         return (Water)
       default:
         break;

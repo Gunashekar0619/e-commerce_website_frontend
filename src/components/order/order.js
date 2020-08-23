@@ -85,7 +85,7 @@ export default class Order extends Component {
                 {this.state.quantity > 0 ?
                 <Button onClick={()=>{this.setState({quantity:this.state.quantity - 1})}} icon='minus' size='mini'></Button> :
                 <Button disabled onClick={()=>{this.setState({quantity:this.state.quantity - 1})}} icon='minus' size='mini'></Button> }
-                <Input style={{textAlign:"right"}} style={{width:"50px" ,height:"25px","border": "2px solid grey","border-radius":" 5px" }} >
+                <Input style={{textAlign:"right"}} style={{width:"50px" ,height:"25px","border": "2px solid grey","borderRadius":" 5px" }} >
                     {this.state.quantity}
                 </Input>
                 {this.state.goods.stock > this.state.quantity ?
