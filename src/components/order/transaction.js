@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withCookies } from 'react-cookie';
-import { Modal, ModalHeader, ModalContent, ModalActions, Button,
+import { Modal, ModalHeader, ModalContent, ModalActions, Button, Popup,
    Card,Image, Grid, GridRow, GridColumn, Header, CardContent, Icon } from 'semantic-ui-react'
 import Darkfantasy from '../images/darkfantasy-img.jpg';
 import Oreo from '../images/oreo.jpeg';
@@ -63,14 +63,14 @@ class transaction extends Component {
       
         return (
             <Modal open 
-            style={{"marginLeft":"20%", marginTop: '5%'}}>
-                <ModalHeader>Transactions <Button style={{"float":"right"}} onClick={()=>{this.closeModal()}}>Close</Button></ModalHeader>
+            style={{"marginLeft":"15%", marginTop: '5%'}}>
+                <ModalHeader>Transactions <Button style={{"float":"right"}} onClick={()=>{this.closeModal()}} negative>Close</Button></ModalHeader>
                 <ModalContent>
                 {console.log(this.state.transactions)}
                 {this.state.transactions.map(item=>{
                     return(
-                <Card basic color={item.success ? "green" :"red"} style={{"width" : "100%"}} key = {item.id}>
-                    <Card.Header style={{"backgroundColor": item.success ? "#e6f7ff":"#FAFAD2","padding":"4px"}}>
+                <Card basic color={item.success ? "green" :"red"} style={{"width" : "100%" }} key = {item.id}>
+                    <Card.Header style={{"backgroundColor": item.success ? "#e6f7ff":"#FAFAD2","padding":"4px",display: "inline-block"}}>
                         <div style = {{"float":"left"}}>
                         <span>ORDER PLACE</span><br/>
                         <span>{item.date} / {item.time}</span>
@@ -82,7 +82,7 @@ class transaction extends Component {
                         </div>                       
                         <div  style={{"float":"right"}}>
                         <Icon  name="chevron down"></Icon>
-                        <Icon  name="angle up"></Icon>
+                        
                         </div>  
                         <div style={{"float":"right"}}>
                         <span >Order  # </span>
@@ -113,23 +113,31 @@ class transaction extends Component {
 
                             <GridColumn style={{"width":"25%"}}>
                                 <div>
-                                <Header style={{marginBottom :"0px",width :"100%",border:"1px solid"}} > 
+                                <Header style={{marginBottom :"0px",width :"100%"}} > 
                                   Payment Details 
-                                  <Button style={{"position":"absolute",right:"0px"}} icon="angle up"></Button>
+                                  <Popup
+                                      on='click'
+                                      pinned
+                                      position='top center'
+                                      trigger={ <Icon style={{"position":"absolute",right:"0px"}} name="angle up"></Icon> }
+                                    >
+                                      <Header> Credit or Debit Card</Header>
+                                       {a=item.cardNumber % 100000, 
+                                          console.log(a)
+                                        }
+                                      <span>Card Number :</span> <span> *******{a}</span>
+
+                                    </Popup>
+                                  
                                 </Header>
-                                <div>
-                                  {a=item.cardNumber % 100000, 
-                                    console.log(a)
-                                  }
-                                
-                                  <span> *******{a} </span>
                                 </div>
-                                </div>
-                                <Header style={{marginTop:"0px",border:"1px solid"}}> Delivery Address </Header>
+                                <Header style={{marginTop:"10px",border:"1px solid"}}> Delivery Address </Header>
                                 <div>
                                   <span> {item.shipmentAddress.address},</span><br/>
                                   <span> {item.shipmentAddress.city},</span><br/>
+                                  <span> {item.shipmentAddress.state},</span><br/>
                                   <span> {item.shipmentAddress.country}</span><br/>
+                                  <span> {item.shipmentAddress.pincode}</span><br/>
                                 <span> {item.phone_no}</span>
                                 </div>
                             </GridColumn>

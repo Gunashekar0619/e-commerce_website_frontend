@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table,Grid,Sidebar, Menu ,Icon,Segment,Checkbox,Header,TransitionablePortal, Divider, Button } from 'semantic-ui-react';
+import { Table,Grid,Sidebar, Popup ,Icon,Segment,Checkbox,Header,TransitionablePortal, Divider, Button } from 'semantic-ui-react';
 
 
 export default class userlist extends Component {
@@ -9,7 +9,7 @@ export default class userlist extends Component {
             profiledetails:[],
             details_form:false,
             details :"",
-            animation: 'swing down',
+            animation: 'scale',
             duration: 500,
             open: false
         }
@@ -36,10 +36,10 @@ export default class userlist extends Component {
         }
         profile()
     }
-    handleClick = () => this.setState((prevState) => ({ open: !prevState.open }))
+    handleClick = () => this.setState((prevState) => ({ open: true }))
     details = (user) =>{
-        this.setState({details : user})
         this.handleClick()
+        this.setState({details : user})
     }
 
     deleteclick(id){
@@ -48,7 +48,14 @@ export default class userlist extends Component {
           method:'DELETE',
           headers:{
               'Content-Type':'application/json',
-          }}).then(console.log("user deleted"))
+          }}).then(res => {
+            for(let i=0;i<this.state.profiledetails.length;i++){
+              if(this.state.profiledetails[i].id === id){
+                delete this.state.profiledetails[i];
+              }
+            }
+          }
+            )
           .catch(err => console.log(err))    
   }
     render() {
@@ -56,7 +63,6 @@ export default class userlist extends Component {
         // console.log(this.state.profiledetails);
         let slno = 1;
         
-        let length  = this.state.profiledetails.length
         let arra = this.state.profiledetails
 
         return (
@@ -83,10 +89,10 @@ export default class userlist extends Component {
                               
                 <Table.Body>
                 {arra.map(user =>
-                (<Table.Row key={user.user_id} onClick={()=>this.details(user)} >
+                (<Table.Row key={user.user_id}  >
                     <Table.Cell>{slno++}</Table.Cell>
-                    <Table.Cell>{user.name}</Table.Cell>
-                    <Table.Cell>{user.type}</Table.Cell>
+                    <Table.Cell onClick={()=>this.details(user)} style={{cursor:"pointer"}} >{user.name} </Table.Cell>
+                    <Table.Cell>{user.type}</Table.Cell> 
                     <Table.Cell>{user.gender}</Table.Cell>
                     <Table.Cell>{user.email}</Table.Cell>
                     <Table.Cell>{user.phone_no}</Table.Cell>
@@ -104,22 +110,34 @@ export default class userlist extends Component {
               style={{
                 left: '40%',
                 position: 'fixed',
-                top: '60px',
+                top: '20%',
                 zIndex: 1000,
-                width : '314px'
-              }}
-            >
-              <Header>{this.state.details.name}</Header>
+                width : '400px',
+                padding: "20px",
+              }}>
+              <Header style={{height:"auto",marginBottom : "20px"}}>{this.state.details.name} 
+              <Popup
+                on='click'
+                pinned 
+                position='top center'
+                trigger={<Icon style={{position:"absolute",right:"10px",cursor:"pointer"}} color="red" name = "trash alternate"></Icon>}>
+                <div style={{"width":"90px"}}>
+                    <span>Are you sure ?</span><br/>
+                    <Button primary  onClick={()=>this.deleteclick(this.state.details.user_id)}>yes</Button>
+                </div></Popup>
+              {/* <Icon name="trash alternate" size="mini" style={{position:"absolute",right:"10px",cursor:"pointer"}} color="red" onClick={()=>this.deleteclick(this.state.details.user_id)}></Icon> */}
+              {/* <Button icon="trash alternate" >Delete</Button> */}
+              </Header>
               <Divider/>
-              <div className="row">
+              <div className="row" style={{width:"auto"}}>
                   <div className="column" style={{"width":"50%","paddingLeft":"10px"}}> 
-                    user id     <br/>
+                    User id     <br/>
                     Type        <br/>
                     Gender      <br/>
                     Ph.No       <br/>
                     Email       <br/>
                     Address     <br/>
-                    city        <br/>
+                    City        <br/>
                   </div>
                   <div className="column">
                     :&nbsp;{this.state.details.user_id}<br/>
@@ -131,7 +149,7 @@ export default class userlist extends Component {
                     :&nbsp;{this.state.details.city}<br/>
                   </div>
               </div>
-              <Button onClick={()=>this.deleteclick(this.state.details.user_id)} negative>Delete</Button>
+              
             </Segment>
           </TransitionablePortal>
             </div>

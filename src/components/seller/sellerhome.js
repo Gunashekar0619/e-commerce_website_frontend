@@ -12,14 +12,6 @@ import Onion from '../images/onion-img.jpg';
 import Carrot from '../images/carrot.jpg';
 import Water from '../images/bisleri500ml-img.png';
 import { Link } from 'react-router-dom';
-// import Productdetails from '../productdetails'
-// import Addgoods from './addgoods'
-// import Food from './Food';
-// import Others from './others';
-// import Fuels from './Fuels';
-// import Grocery from './grocery';
-// import Order from '../order'
-// import Itemdisplay from './itemdisplay';
 import {
   Grid,
   Button,
@@ -40,20 +32,6 @@ import {
   // ItemMeta,
   // GridColumn,
 } from 'semantic-ui-react'
-
-
-// const listfood = props => {
-//   <div key = this.props.
-// }
-//const Placeholder = () => <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
-// const newt = this.props.cookies.get('mr_user')
-// function Orderclicked(props){
-//   console.log("kajf");
-  
-//   return(<div>
-
-//   </div>)
-// }
 
 class Food extends Component {
   constructor(props){
@@ -94,9 +72,6 @@ class Food extends Component {
 
   handleRate = (e, { rating, maxRating }) =>{
     this.setState({ uprate :{rating, maxRating}})    
-    // console.log(this.state.itemsel.id);
-    // console.log(this.props.user);
-    // console.log("1st"+rating);
     fetch(`http://127.0.0.1:8000/api/Goods/${this.state.itemsel.id}/rate_goods/`,{
         method: 'POST',
         headers: {
@@ -105,12 +80,6 @@ class Food extends Component {
         },
         body: JSON.stringify({stars : rating })
         }).then( resp => this.getDetails())
-        // .then(res => {
-        //   // console.log("res1"+ res.result.stars);        
-        //   this.setState({itemsel:{avg_ratings:res.result.stars}})
-        //   // console.log("res 2"+this.state.itemsel.avg_ratings);
-        //   this.getDetails()
-        // })
         .catch(error => console.log(error))    
   }
 
@@ -160,25 +129,13 @@ imagedisplay = food =>{
   }}
 
 
-// available=(name)=>{
-//   const count = _(this.props.food).groupBy('name').values().map(
-// //     (group)=>({...group[0],
-// //       qty:group.length})
-// //   )
-   
-//    console.log(count);
-   
-//   return 0 
-//  } 
 closeConfigShow = (closeOnEscape, closeOnDimmerClick,name) => () => {
   this.setState({ closeOnEscape, closeOnDimmerClick, open: true ,itemsel:name})  
 }
 
 
 
-stock = async (name)=>{
-  // console.log("1 inside");
-  
+stock = async (name)=>{  
    return fetch(`http://127.0.0.1:8000/api/Goods/duplicate/?name=${name}`,{
     method : "Get",
     headers : {
@@ -189,8 +146,6 @@ stock = async (name)=>{
   .then(res => { 
     return res.count;
   });
-    // this.setState({  count : res.count})})
-  // console.log(count);
 }
 
 close = () => this.setState({ open: false })
@@ -203,8 +158,6 @@ addgoods(){
 render() {
   let page1 = this.state.page
   console.log(page1);
-  
-  // console.log(this.props.list);
   let arr = this.props.list  
   if(arr.length>this.state.l)
   {
@@ -228,7 +181,8 @@ render() {
     <Segment >
       <Grid columns={2} centered >
         <Grid.Row >
-        { this.props.list.map( food => {   
+          {this.props.list.length>0 ?
+        this.props.list.map( food => {   
           return(                    
             <Grid.Column key={food.id}>
                 <Segment size="small"  piled style={{"width":"450px","height":"160px"}} >
@@ -248,7 +202,7 @@ render() {
               </Grid>
             </Segment>
           <br/>
-        </Grid.Column>)})}</Grid.Row>
+        </Grid.Column>)}):<span>- - No Items Added- -</span>}</Grid.Row>
       </Grid> 
     </Segment>
     <div>

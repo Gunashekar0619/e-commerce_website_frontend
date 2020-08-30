@@ -15,13 +15,14 @@ class admin extends Component {
         super(props);
         const token = this.props.cookies.get('mr_user')
         this.state = { 
+            user:"",
             goods:[],
             food1:[],
             fuel1:[],
             veggies1:[],
             other1:[],
             history:false,
-            activeform : "home",
+            activeform : "",
             transactions : [],
             menuactiveItem: 'home',
             currnt_user:{
@@ -32,19 +33,62 @@ class admin extends Component {
     }
     
     componentDidMount() { 
+
+
+        const profile = () => fetch('http://127.0.0.1:8000/api/userdetails/',{
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json',
+            //'Authorization' : `Token ${token.token}`
+        },
+        body: JSON.stringify({ "user_id": this.state.currnt_user.user_id })
+        }).then ( res => res.json())
+        .then (res => {
+            const d = res.data;
+            console.log(d);
+            this.setState({profile_id : d.profile_id})
+            this.setState({user : d}); 
+        })
+        .catch(error => this.setState({erro1r : true}))   
+        profile()    
+
         fetch('http://127.0.0.1:8000/api/Goods/',{
             method: 'GET',
             headers: {
                 'Authorization' : `Token ${this.state.currnt_user.to1ken}`
             }
           }).then(resp => resp.json())
-          .then(res =>{ this.setState({goods:res})
+          .then(async res =>{ this.setState({goods:res})
+                        this.state.goods = await this.getOwner(this.state.goods);
                         this.findfood() 
-                    
+                        this.setState({activeform : "home"})
                      })
+
+        
     }
 
     //handleItemClick = (e, { name }) => this.setState({ menuactiveItem: name })
+    getOwner = async (goods) => {
+        const updatedGoods = await goods.map(good => {
+            // get the owner details
+            return fetch(`http://127.0.0.1:8000/api/user/${good.owner}/`,{
+                method: 'GET',
+                headers: {
+                    'Content-Type':'application/json',
+                    //'Authorization' : `Token ${token.token}`
+                }     
+            })
+            .then (res => res.json())
+            .then (res => {
+                return {
+                    ...good,
+                    ownerName: res.username
+                }
+            })
+            .catch(error =>console.log(error));
+        })
+        return await Promise.all(updatedGoods);
+    }
     
     findfood=()=>{
         this.state.goods.map(item =>{
@@ -104,19 +148,19 @@ class admin extends Component {
           )
         const { menuactiveItem } = this.state
 
-         
+         console.log(this.state.user);
 
         const displayform = () => {
             if(this.state.activeform === "home"){
-                return <Home usertype = {"customer"} food={this.state.food1} fuel={this.state.fuel1} grocery={this.state.veggies1} others={this.state.other1}/>
+                return <Home usertype = {"customer"} userDetails={this.state.user} food={this.state.food1} fuel={this.state.fuel1} grocery={this.state.veggies1} others={this.state.other1}/>
             }else if(this.state.activeform === "food"){             
-                return( <Food usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.food1}/>)
+                return( <Food usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.food1} userDetails={this.state.user}/>)
              }else if (this.state.activeform === "fuel") {
-                 return( <Fuels usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.fuel1}/>)
+                 return( <Fuels usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.fuel1} userDetails={this.state.user}/>)
              }else if (this.state.activeform === "grocery"){
-                 return(<Grocery  usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.veggies1}/>)
+                 return(<Grocery  usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.veggies1} userDetails={this.state.user}/>)
             }else if (this.state.activeform === "others") {
-                 return(<Others usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.other1}/>)
+                 return(<Others usertype = {"customer"} user={this.state.currnt_user.to1ken} list = {this.state.other1} userDetails={this.state.user}/>)
             }else if (this.state.activeform === "friends") {
                  return(<Itemdisplay usertype = {"customer"} list = {this.state.other1}/>)
             }else if (this.state.activeform === "profile") {
@@ -145,10 +189,7 @@ class admin extends Component {
                     </Dropdown>
                     
                     <Menu.Menu position='right'>
-                        <Menu.Item
-                            name="Cart"
-                            icon="cart"
-                        />
+                        
                         <Dropdown trigger={trigger} pointing className='link item'>
                             <Dropdown.Menu>
                                 <Dropdown.Item onClick={() => this.history()}>History</Dropdown.Item>

@@ -12,12 +12,7 @@ import Onion from './images/onion-img.jpg';
 import Carrot from './images/carrot.jpg';
 import Water from './images/bisleri500ml-img.png';
 import { Link } from 'react-router-dom';
-// // import Food from './Food';
-// import Others from './others';
-// import Fuels from './Fuels';
-// import Grocery from './grocery';
 import Order from './order/order'
-// import Itemdisplay from './itemdisplay';
 import {
   Grid,
   Button,
@@ -25,32 +20,12 @@ import {
   Icon,
   Label,
   Modal,
-  // Item,
-  // Rail,
 Header,
 Rating,
   Segment,
-  // Sticky,
-  //Divider,
-  // Card,
   Container,
-  Divider,
-  // ItemMeta,
-  // GridColumn,
+  Divider,Message
 } from 'semantic-ui-react'
-
-// const listfood = props => {
-//   <div key = this.props.
-// }
-//const Placeholder = () => <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
-// const newt = this.props.cookies.get('mr_user')
-// function Orderclicked(props){
-//   console.log("kajf");
-  
-//   return(<div>
-
-//   </div>)
-// }
 
 class Food extends Component {
   state = {
@@ -77,7 +52,9 @@ class Food extends Component {
       itemsel:"",
       instock:true,
       uprate:"",
-      count:0
+      count:0,
+      allitems :true,
+      nearItems :[]
   }    
 
   contextRef = createRef()
@@ -128,30 +105,6 @@ class Food extends Component {
         )
         .catch(error => console.log(error))
 }
-// imagedisplay = food => {
-//   if(food === "Oreo"){
-//     return(Oreo)
-//   }else if(food === "Darkfantasy"){
-//     return (Darkfantasy)
-//   }else if(food === "Donuts"){
-//     return (Donuts)
-//   }else if(food === "Snickers"){
-//     return (Snickers)
-//   }else if(food=== "Dairymilk"){
-//     return(Dairym)
-//   }else if(food === "petrol"){
-//     return(Petrol)
-//   }else if(food === "diseal"){
-//     return (Diseal)
-//   }else if(food === "onion"){
-//     return (Onion)
-//   }else if(food === "carrot"){
-//     return (Carrot)
-//   }else if(food === "water"){
-//     return (Water)
-//   }
-// }
-
 imagedisplay = food =>{
   switch (food) {
     case "Oreo":
@@ -182,68 +135,85 @@ imagedisplay = food =>{
     let response = {show : false , product : this.state.itemsel, user : "admin"}
     this.props.cookies.set('goods',response) 
   }
-// available=(name)=>{
-//   const count = _(this.props.food).groupBy('name').values().map(
-// //     (group)=>({...group[0],
-// //       qty:group.length})
-// //   )
-   
-//    console.log(count);
-   
-//   return 0 
-//  } 
-closeConfigShow = (closeOnEscape, closeOnDimmerClick,name) => () => {
-  this.setState({ closeOnEscape, closeOnDimmerClick, open: true ,itemsel:name})  
-}
 
 
-
-stock = async (name)=>{
-  // console.log("1 inside");
-  
-   return fetch(`http://127.0.0.1:8000/api/Goods/duplicate/?name=${name}`,{
-    method : "Get",
-    headers : {
-      'Content-Type':'application/json',
-      'Authorization' : `Token ${this.state.token}`
-    }
-  }).then( resp => resp.json() )
-  .then(res => { 
-    return res.count;
-  });
-    // this.setState({  count : res.count})})
-  // console.log(count);
-}
-
-
-close = () => this.setState({ open: false })
-
-async UNSAFE_componentWillMount(){
-
-  const goods = _.uniqBy(this.props.list, 'name');
-
-  for (const food of goods) {
-    // get the count
-    let count = await this.stock(food.name);
-    // console.log(count);
-    let stock = food.stock;
-    if(stock === 0){
-      count = count - 1 ;
-    }else{
-    count = count + stock ;}
-    food['count'] = count;
-    // console.log(food);
-    this.setState({updatedList:[...this.state.updatedList,food]})
+  closeConfigShow = (closeOnEscape, closeOnDimmerClick,name) => () => {
+    this.setState({ closeOnEscape, closeOnDimmerClick, open: true ,itemsel:name})  
   }
-}
-render() {
+
+
+
+  stock = async (name)=>{
+    // console.log("1 inside");
+    
+    return fetch(`http://127.0.0.1:8000/api/Goods/duplicate/?name=${name}`,{
+      method : "Get",
+      headers : {
+        'Content-Type':'application/json',
+        'Authorization' : `Token ${this.state.token}`
+      }
+    }).then( resp => resp.json() )
+    .then(res => { 
+      console.log(res);
+      return res.count;
+    });
+      // this.setState({  count : res.count})})
+    // console.log(count);
+  }
+
+  NearBY = () => {
+    console.log(this.props.list);
+    var products = this.props.list; 
+    var nearItem =[]
+    products.map(item => {
+      if(this.props.userDetails.pincode === item.pincode){
+        nearItem.push(item)
+      }
+    })
+    this.state.nearItems = nearItem
+    console.log(this.state.nearItems);
+    var duplicate= Array.from(new Set(nearItem.map(s => s.name)))
+      .map(name => {
+        return nearItem.find(s => s.name === name)
+      })
+    console.log(duplicate );
+    var updateDuplicate =[]
+    this.setState({allitems : false})
+  }
+
+  AllItems = () =>{
+    this.setState({allitems : true})
+  }
+  
+  close = () => this.setState({ open: false })
+
+  async UNSAFE_componentWillMount(){
+
+    const goods = _.uniqBy(this.props.list, 'name');
+
+    for (const food of goods) {
+      // get the count
+      let count = await this.stock(food.name);
+      // console.log(count);
+      let stock = food.stock;
+      if(stock === 0){
+        count = count - 1 ;
+      }else{
+      count = count + stock ;}
+      food['count'] = count;
+      // console.log(food);
+      this.setState({updatedList:[...this.state.updatedList,food]})
+    }
+  }
+  render() {
     // this.state.flist.map(item => {
     //   if (item.type=== "Food"){
     //     return (this.setState({plist:[...this.state.plist,item] }))
     //   }
     // })
     let page1 = this.state.page
-    
+    console.log(this.props.list);
+
       // console.log(this.state.updatedList);
       
     const orderclicked =()=>{
@@ -259,8 +229,24 @@ render() {
         <Segment >
            <Label size="big" as='a' color='teal' ribbon>
                 Foods
-               </Label> <span ><Label size="large" pointing='below'>Available Food</Label></span>
-            {!this.state.open ? (<Segment raised >
+               </Label>
+               {this.state.allitems ?
+                <Label style={{marginLeft :"34%"}} size="large" pointing='below'>Goods in  Stock</Label> :
+               <Label style={{marginLeft :"34%"}} size="large" pointing='below'>Goods Near BY </Label> }
+               {this.state.usertype !== "admin" ? 
+               <Button.Group floated="right">
+                <Button primary onClick={()=>this.AllItems()}>All</Button>
+                <Button.Or />
+                <Button onClick={()=>this.NearBY()}  primary>Near by</Button>
+              </Button.Group>:""}
+              
+            {!this.state.open ? (
+              this.state.allitems ? <Segment raised >
+                {this.state.usertype !== "admin" ? 
+                <Message negative>
+                    <Message.Header>Select NearBY to see the goods which is Available in your area</Message.Header>
+                    <Button style={{position : "absolute",right : "6px",top : "5px"}} onClick={()=>this.NearBY()} primary>NearBY</Button>
+                </Message>:""}
                   <Grid columns={2} centered divided>
                     <Grid.Row >
                         { this.state.updatedList.map( food => {   
@@ -284,8 +270,46 @@ render() {
                                 <Divider/>
                                {this.state.usertype === "admin" ? ( <div>
                                 <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button>
+                                </div>): (<div>{food.pincode === this.props.userDetails.pincode ?
+                              food.count > 0 ?(<Link to={{pathname:`/customer/order/${food.id}`}} ><Button 
+                                positive
+                                floated = "right">Order</Button></Link> ):(<Button 
+                                  basic color='red'
+                                floated = "right">Out of Stock</Button> ) :""}
+                                <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button></div>)}
+                                <br/><br></br>
+                              </Segment>
+                              <Divider/>
+                            </Grid.Column>)
+                         })}</Grid.Row>
+                </Grid> 
+            </Segment> : <Segment raised >
+                  <Grid columns={2} centered divided>
+                    <Grid.Row >
+                        { this.state.nearItems.map( food => {   
+                            return(                    
+                            <Grid.Column key={food.id}>
+                              <Segment size="small" piled style={{"width":"450px","height":"auto"}} >
+                              <Grid columns='two'>
+                              <Grid.Column width={6}>
+                                  <Image onClick={this.closeConfigShow(true, false,food)} rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(food.name)}/>
+                              </Grid.Column>      
+                              <Grid.Column width={9}> 
+                                <h2>{food.name} </h2>
+                                <Label>Price : $ {food.price} </Label><br/>
+                               <Label>Available Stock :  {food.stock} </Label><br/>
+                            <Label>Seller Name : {food.ownerName}</Label><br/>
+                            <Label>Location : {food.location}</Label>
+                               {/* <Label><Rating icon='star' defaultRating={this.state.food.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label> */}
+                              {/* <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>  */}
+                               </Grid.Column>
+                               
+                               </Grid>
+                                <Divider/>
+                               {this.state.usertype === "admin" ? ( <div>
+                                <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button>
                                 </div>): (<div>
-                              {food.count > 0 ?(<Link to={{pathname:`/customer/order/${food.id}`}} ><Button 
+                              {food.stock > 0 ?(<Link to={{pathname:`/customer/order/${food.id}`}} ><Button 
                                 positive
                                 floated = "right">Order</Button></Link> ):(<Button 
                                   basic color='red'
@@ -300,7 +324,7 @@ render() {
             </Segment> ):(<div>
             <Segment raised >
             <Modal
-            style={{ "width":"600px","height":"330px" , marginLeft : "25%", marginTop : "10%"}}
+            style={{ "width":"600px","height":"auto" , marginLeft : "25%", marginTop : "10%"}}
           open={open}
           closeOnEscape={closeOnEscape}
           closeOnDimmerClick={closeOnDimmerClick}
@@ -330,12 +354,13 @@ render() {
               <Button negative onClick = {() => this.handleDelete( this.state.itemsel.id)}>DELETE</Button>
               <Link to={{pathname:`/seller/${this.state.itemsel.id}/addgoods`}}><Button onClick= {()=> {this.updategoods()}} positive>Edit</Button></Link>
               </div>
-            ): (<div><Button floated="right">Add to Cart</Button>
-            {this.state.instock?(<Button 
-              positive
-              floated = "right">Order</Button> ):(<Button 
-                basic color='red'
-              floated = "right">Out of Stock</Button> )}</div>)}
+            ): (<div>{this.state.itemsel.pincode === this.props.userDetails.pincode ?
+              this.state.itemsel.stock ?(<Button style={{marginBottom:"10px"}}
+                positive
+                floated = "right">Order</Button> ):(<Button style={{marginBottom:"10px"}}
+                  basic color='red'
+                floated = "right">Out of Stock</Button> ) : 
+                <Message style={{textAlign:"center"}} warning> <Message.Header>This Product is not Available in your location</Message.Header> </Message>}</div>)}
             
             </Modal.Actions>
         </Modal>

@@ -11,7 +11,6 @@ class Goodsform extends Component {
     super(props)
     const form = this.props.cookies.get('goods')
     const user = this.props.cookies.get('mr_user')
-    let location =""
     this.user(user.user_id,form.show)
     this.state = { 
     user_id:user.user_id,
@@ -25,7 +24,8 @@ class Goodsform extends Component {
               price:"",
               stock:"",
               owner:user.user_id,
-              location:location
+              pincode:"",
+              location:""
             }}
   }
   componentDidMount(){
@@ -52,6 +52,7 @@ class Goodsform extends Component {
       }).then( resp => resp.json())
       .then ( res => {let a = this.state.product;
         a.location = res.data.address;
+        a.pincode = res.data.pincode
         this.setState({product:a})}
       )
       .catch(error => console.log(error))

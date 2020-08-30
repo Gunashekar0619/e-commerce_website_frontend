@@ -25,16 +25,28 @@ export default  withCookies (class home extends Component {
     super(props);
     const token = this.props.cookies.get('mr_user')
     const usertype = this.props.usertype
+    const goods= {
+      food : this.props.food,
+      fuel : this.props.fuel,
+      grocery: this.props.grocery,
+      others: this.props.others,
+    }
+    console.log(goods);
     this.state={
       activeform:"home",
       open:false,
       display:"",
       itemsel:"",
-      food3:this.props.food,
       form:true,
-      goods: {},
+      goods: goods,
       admin: false,
       customer:true,
+      nearby:{
+        food:this.props.food,
+        fuel:this.props.fuel,
+        grocery:this.props.grocery,
+        others:this.props.others
+      },
       currnt_user:{
         usertype : usertype,
         to1ken : token.token,
@@ -48,23 +60,47 @@ export default  withCookies (class home extends Component {
   }
   close = () => this.setState({ open: false })
 
-  available=(name)=>{
-    // const count = _(this.props.food).groupBy('name').values().map(
-    //   (group)=>({...group[0],qty:group.length})
-    // )
-    // console.log(name);
-    
-    // console.log(count);
-     
-     
-    return 0 
-  } 
-
   componentDidMount(){
     if (this.state.currnt_user.usertype === "admin"){
       this.setState({ admin : true})
     }else if(this.state.currnt_user.usertype === "customer"){
       this.setState({ customer: true })
+      
+    console.log(this.state.goods);
+    let FoodNear = this.state.goods.food
+    let FuelNear = this.state.goods.fuel
+    let GroceryNear = this.state.goods.grocery
+    let OtherNear = this.state.goods.others
+    console.log(FoodNear);
+
+    this.state.nearby.food = []
+    FoodNear.map(item => {
+      if(this.props.userDetails.pincode === item.pincode){
+        
+        this.state.nearby.food.push(item)
+      }
+    })
+
+    this.state.nearby.fuel =[]
+    FuelNear.map(item => {
+      if(this.props.userDetails.pincode === item.pincode){
+        this.state.nearby.fuel.push(item)
+      }
+    })
+
+    this.state.nearby.grocery =[]
+    GroceryNear.map(item => {
+      if(this.props.userDetails.pincode === item.pincode){
+        this.state.nearby.grocery.push(item)
+      }
+    })
+
+    this.state.nearby.others =[]
+    OtherNear.map(item => {
+      if(this.props.userDetails.pincode === item.pincode){
+        this.state.nearby.others.push(item)
+      }
+    })
     }
   }
 
@@ -126,21 +162,12 @@ export default  withCookies (class home extends Component {
      window.location.reload(true)
   }
 
-  // display1(qwe){
-  //   if(qwe === "food"){
-  //     console.log("done");
-      
-      
-  //     return (<Food user={this.props.user}></Food>)
-  //   }else return(console.log("error")
-  //   )
-  // } 
-// food2 = "foods";
   render() {  
   function displayform (formactive) {
       this.setState({ form : false ,display : formactive})
      }
-    
+     console.log(this.state.goods);
+    //  console.log(this.props.food);
     const { open, closeOnEscape, closeOnDimmerClick } = this.state
     return ( <Container>
     {this.state.form?( <Container>
@@ -152,7 +179,7 @@ export default  withCookies (class home extends Component {
           </div>
         <Segment size="small" >
           <Grid columns="equal" divided>
-          {this.props.food.map((food1,i) =>{
+          {this.state.nearby.food.map((food1,i) =>{
             if(i<3){
             return(
               <Grid.Column key={food1.id}>
@@ -161,9 +188,9 @@ export default  withCookies (class home extends Component {
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
-                  <Label>Price : $ {food1.price} </Label><br/><br/>
-                  
-                  {!this.state.admin ?(<Button floated="right" >buy</Button>):""}
+                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : $ {food1.price} </Label><br></br>
+                  <Button primary onClick={this.closeConfigShow(true, false,food1)} >Product Details</Button>
+                  {!this.state.admin ?(<Link to={{pathname:`/customer/order/${food1.id}`}} ><Button positive floated="right" >buy</Button></Link>):""}
                 </Card.Content>
               </Card>
               </Grid.Column>
@@ -179,7 +206,7 @@ export default  withCookies (class home extends Component {
           </div>
         <Segment size="small" >
           <Grid columns="equal" divided>
-          {this.props.fuel.map((food1,i) =>{
+          {this.state.nearby.fuel.map((food1,i) =>{
             if(i<3){
             return(
               <Grid.Column key={food1.id}>
@@ -188,9 +215,9 @@ export default  withCookies (class home extends Component {
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
-                  <Label>Price : $ {food1.price} </Label><br/><br/>
-                  
-                  {!this.state.admin ?(<Button floated="right" >buy</Button>):""}
+                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : $ {food1.price} </Label><br></br>
+                  <Button primary onClick={this.closeConfigShow(true, false,food1)} >Product Details</Button>
+                  {!this.state.admin ?(<Link to={{pathname:`/customer/order/${food1.id}`}} ><Button positive floated="right" >buy</Button></Link>):""}
                 </Card.Content>
               </Card>
               </Grid.Column>
@@ -206,7 +233,7 @@ export default  withCookies (class home extends Component {
           </div>
         <Segment size="small" >
           <Grid columns="equal" divided>
-          {this.props.grocery.map((food1,i) =>{
+          {this.state.nearby.grocery.map((food1,i) =>{
             if(i<3){
             return(
               <Grid.Column  key={food1.id}>
@@ -215,9 +242,9 @@ export default  withCookies (class home extends Component {
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
-                  <Label>Price : $ {food1.price} </Label><br/><br/>
-                  
-                  {!this.state.admin ?(<Button floated="right" >buy</Button>):""}
+                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : $ {food1.price} </Label><br></br>
+                  <Button primary onClick={this.closeConfigShow(true, false,food1)}>Product Details</Button>
+                  {!this.state.admin ?(<Link to={{pathname:`/customer/order/${food1.id}`}} ><Button positive floated="right" >buy</Button></Link>):""}
                 </Card.Content>
               </Card>
               </Grid.Column>
@@ -233,7 +260,7 @@ export default  withCookies (class home extends Component {
           </div>
         <Segment size="small" >
           <Grid columns="equal" divided>
-          {this.props.others.map((food1,i) =>{
+          {this.state.nearby.others.map((food1,i) =>{
             if(i<3){
             return(
               <Grid.Column  key={food1.id}>
@@ -242,9 +269,9 @@ export default  withCookies (class home extends Component {
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
-                  <Label>Price : $ {food1.price} </Label><br/><br/>
-                
-                  {!this.state.admin ?(<Button color="blue" floated="right" >buy</Button>):""}
+                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : $ {food1.price} </Label><br></br>
+                  <Button primary onClick={this.closeConfigShow(true, false,food1)}>Product Details</Button>
+                  {!this.state.admin ?(<Link to={{pathname:`/customer/order/${food1.id}`}} ><Button positive floated="right" >buy</Button></Link>):""}
                 </Card.Content>
               </Card>
               </Grid.Column>
@@ -260,13 +287,13 @@ export default  withCookies (class home extends Component {
         {(() => { 
         switch (this.state.display) {
           case "food":               
-            return( <Food user={this.state.currnt_user.to1ken} list ={this.props.food} usertype={this.state.currnt_user.usertype}/> );
+            return( <Food user={this.state.currnt_user.to1ken} userDetails={this.props.userDetails} list ={this.props.food} usertype={this.state.currnt_user.usertype}/> );
           case "fuel":   
-            return( <Fuels user={this.state.currnt_user.to1ken} list ={this.props.fuel} usertype={this.state.currnt_user.usertype}/> );
+            return( <Fuels user={this.state.currnt_user.to1ken} userDetails={this.props.userDetails} list ={this.props.fuel} usertype={this.state.currnt_user.usertype}/> );
           case "grocery":   
-            return( <Grocery user={this.state.currnt_user.to1ken} list ={this.props.grocery} usertype={this.state.currnt_user.usertype}/> );
+            return( <Grocery user={this.state.currnt_user.to1ken} userDetails={this.props.userDetails} list ={this.props.grocery} usertype={this.state.currnt_user.usertype}/> );
           case "others":   
-            return( <Others user={this.state.currnt_user.to1ken} list ={this.props.others} usertype={this.state.currnt_user.usertype}/> );
+            return( <Others user={this.state.currnt_user.to1ken} userDetails={this.props.userDetails} list ={this.props.others} usertype={this.state.currnt_user.usertype}/> );
           default:
               return console.log("error");
         }
@@ -275,14 +302,14 @@ export default  withCookies (class home extends Component {
         {this.state.open?(<div>
             <Segment raised >
             <Modal
-            style={{ "width":"600px","height":"300px" , marginLeft : "25%", marginTop : "10%"}}
+            style={{ "width":"600px","height":"auto" , marginLeft : "25%", marginTop : "10%"}}
           open={open}
           closeOnEscape={closeOnEscape}
           closeOnDimmerClick={closeOnDimmerClick}
           onClose={this.close}
         >
           <Modal.Header>Product details
-            <Button floated="right" onClick={this.close}>Back</Button>
+            <Button style={{position:"absolute",right:"5px",top:"15px"}} onClick={this.close}>Back</Button>
           </Modal.Header>
           <Modal.Content>
               <Grid columns={2} style={{"bordercolor":"red"}}>
@@ -295,21 +322,23 @@ export default  withCookies (class home extends Component {
             <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
             <Label><Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
             <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
-            <Label> Location : {this.state.itemsel.location} </Label>
+            <Label> Location : {this.state.itemsel.location} </Label><br/>
+            <Label> In Stock : {this.state.itemsel.stock} </Label>
             {/* <br/><Label>Available in : {this.state.itemsel.count}</Label><br/> */}
             </Grid.Column>
             </Grid>
             </Modal.Content>
-            <Modal.Actions>
+            <Modal.Actions style={{padding:"5px"}}>
             {this.state.admin ?(<div>
               <Button negative onClick = {() => this.handleDelete( this.state.itemsel.id)}>DELETE</Button>
               <Link to={{pathname:`/seller/${this.state.currnt_user.user_id}/addgoods`}}><Button onClick= {()=> {this.updategoods()}} positive>Edit</Button></Link>
               </div>
             ): (<div>
-              {/* <Button floated="right">Add to Cart</Button> */}
-            {this.state.instock?(<Button 
-              positive
-              floated = "right">Order</Button> ):(<Button 
+            {this.state.itemsel.stock ?(<Button.Group>
+                <Button negative onClick={this.close}>Cancel</Button>
+                <Button.Or />
+                <Link to={{pathname:`/customer/order/${this.state.itemsel.id}`}} ><Button positive>Order</Button></Link>
+              </Button.Group>):(<Button 
                 basic color='red'
               floated = "right">Out of Stock</Button> )}</div>)}
             

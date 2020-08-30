@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import Menu from './menu'
 import { withCookies } from 'react-cookie';
 import '../App.css';
-
-
 import {
     // Modal,
     Button,
@@ -16,7 +14,6 @@ import {
     Grid,
     Form,
     Input,
-    
     Icon,
     Modal,
     // TextArea,
@@ -80,7 +77,6 @@ class Profile extends Component {
  
     userinputchanged = event => {
       console.log(this.state.current_user);
-      
       let usdtl = this.state.current_user;
       usdtl[event.target.name] = event.target.value;
       this.setState({current_user: usdtl})
@@ -145,15 +141,6 @@ class Profile extends Component {
       window.location.reload()
     }
     render() {
-      
-      // const genderOptions = [
-      //   { key: 'm', text: 'Male', value: 'male' },
-      //   { key: 'f', text: 'Female', value: 'female' },
-      //   { key: 'o', text: 'Other', value: 'other' },
-      // ] 
-
-      // console.log(this.state.token);
-      // this.findtype()
         return ( <Container>
         <Menu  present = {()=>this.actform}  user = {this.state.userdetails.type} active="profile"></Menu>        
         {this.state.isupdated ? (<div className="global">
@@ -170,29 +157,33 @@ class Profile extends Component {
         {!this.state.updatefm? (    
         <Segment  style={{width:"50%"}}>
           <Container>
-            <Header>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Profile Details</Header>
+            <Header textAlign="left">Profile Details</Header>
             <Divider/>
             <Grid columns="2" >
               <GridRow>
                 <GridColumn width="4" >
-                    <Label>Username :</Label><br/><br/>
-                    <Label>Email :</Label><br/><br/>
-                    <Label>Type :</Label><br/><br/>
-                    <Label>Phone :</Label><br/><br/>
-                    <Label>Gender :</Label><br/><br/>
-                    <Label>Address :</Label><br/><br/>
-                    <Label>City :</Label><br/><br/>
-                    <Label>Country :</Label><br/><br/>
+                    <Label>Username </Label><br/><br/>
+                    <Label>Email </Label><br/><br/>
+                    <Label>Type </Label><br/><br/>
+                    <Label>Phone </Label><br/><br/>
+                    <Label>Gender </Label><br/><br/>
+                    <Label>Address </Label><br/><br/>
+                    <Label>City </Label><br/><br/>
+                    <Label>Country </Label><br/><br/>
+                    {this.state.userdetails.type !== "admin" ?
+                    <Label>Pin Code </Label> :""}
                 </GridColumn >
                 <GridColumn >
-                  <Label>{this.state.current_user.username}</Label><br/><br/>
-                  <Label>{this.state.current_user.email}</Label><br/><br/>
-                  <Label>{this.state.userdetails.type}</Label><br/><br/>  
-                    <Label>{this.state.userdetails.phone_no}</Label><br/><br/>
-                    <Label>{this.state.userdetails.gender}</Label><br/><br/>
-                    <Label>{this.state.userdetails.address}</Label><br/><br/>
-                    <Label>{this.state.userdetails.city}</Label><br/><br/>
-                    <Label>{this.state.userdetails.country}</Label><br/><br/>
+                  :<Label>{this.state.current_user.username}</Label><br/><br/>
+                  :<Label>{this.state.current_user.email}</Label><br/><br/>
+                  :<Label>{this.state.userdetails.type}</Label><br/><br/>  
+                  :<Label>{this.state.userdetails.phone_no}</Label><br/><br/>
+                  :<Label>{this.state.userdetails.gender}</Label><br/><br/>
+                  :<Label>{this.state.userdetails.address}</Label><br/><br/>
+                  :<Label>{this.state.userdetails.city}</Label><br/><br/>
+                  :<Label>{this.state.userdetails.country}</Label><br/><br/>
+                  {this.state.userdetails.type !== "admin" ?
+                  <span>:<Label>{this.state.userdetails.pincode}</Label></span> :""}
                 </GridColumn>    
                 </GridRow>            
             </Grid>
@@ -201,10 +192,10 @@ class Profile extends Component {
             <Button onClick={this.upview} positive floated="right">Update</Button>
             </Container>
         </Segment> ):(<Segment>
-          <Button active onClick={this.reload} floated="right">Back</Button>
-          <h3 size="large">Edit Profile</h3>
-          <Divider/>
-          <Form style={{width:"100%"}}>
+        <Button active onClick={this.reload} floated="right">Back</Button>
+        <h3 size="large">Edit Profile</h3>
+        <Divider/>
+        <Form style={{width:"100%"}}>
         <Form.Group widths='equal'>
           <Form.Field
           placeholder = 'username'
@@ -228,21 +219,9 @@ class Profile extends Component {
             </optgroup>
           </select>
           </Form.Field>
-          {/* <Form.Field
-            name='gender'
-            control={Select}
-            placeholder={this.state.userdetails.gender}
-            options={[{ text:"Male", value: 'male' },
-                      { text:"Female", value: 'female'},
-                      {  text:"Other", value: 'other'}]}
-            label={{ children: 'Gender', htmlFor: 'form-select-control-gender' }}
-            search
-            onChange={this.proinputchanged}
-            searchInput={{ id: 'form-select-control-gender' }}
-            value = {this.state.userdetails.type}
-          /> */}
-        </Form.Group><Form.Group widths={"equal"} >
-        <Form.Field 
+        </Form.Group>
+        <Form.Group widths={"equal"} >
+          <Form.Field 
           name='email'
           control={Input}
           label='Email'
@@ -255,48 +234,65 @@ class Profile extends Component {
           label='Phone No.'
           onChange={this.proinputchanged}
           value={this.state.userdetails.phone_no}      
-          /></Form.Group>
+          />
+        </Form.Group>
         <FormGroup widths={"equal"}>
-        <Form.Field
-          name='address'
-          label="Address"
-          control={Input}
-          onChange={this.proinputchanged}
-          value={this.state.userdetails.address}
-        />
-        <Form.Field
-          name='city'
-          label="City"
-          control={Input}
-          onChange={this.proinputchanged}
-          value={this.state.userdetails.city}
-        />
-        <Form.Field
-          name='country'
-          label="Country"
-          control={Input}
-          onChange={this.proinputchanged}
-          value={this.state.userdetails.country}
-        /></FormGroup>
+          <Form.Field
+            name='address'
+            label="Address"
+            control={Input}
+            onChange={this.proinputchanged}
+            value={this.state.userdetails.address}
+          />
+          <Form.Field
+            name='city'
+            label="City"
+            control={Input}
+            onChange={this.proinputchanged}
+            value={this.state.userdetails.city}
+          />
+          <Form.Field
+            name='state'
+            label="State"
+            control={Input}
+            onChange={this.proinputchanged}
+            value={this.state.userdetails.state}
+          />
+        </FormGroup>
         <FormGroup>
-        <Form.Field
-          negative
-          id='form-button-control-public'
-          control={Button}
-          onClick={this.reload}
-          content='Cancel'
-        />
-        <Form.Field
-        positive
-          id='form-button-control-public'
-          control={Button}
-          content='Update'
-          onClick={this.updateclicked}
-        />
-       </FormGroup>
+          {this.state.userdetails.type !== "admin" ? 
+          <Form.Field
+            name='pincode'
+            label="Pin Code"
+            control={Input}
+            onChange={this.proinputchanged}
+            value={this.state.userdetails.pincode}
+          />:""}
+          <Form.Field
+            name='country'
+            label="Country"
+            control={Input}
+            onChange={this.proinputchanged}
+            value={this.state.userdetails.country}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Form.Field
+            negative
+            id='form-button-control-public'
+            control={Button}
+            onClick={this.reload}
+            content='Cancel'
+          />
+          <Form.Field
+          positive
+            id='form-button-control-public'
+            control={Button}
+            content='Update'
+            onClick={this.updateclicked}
+          />
+        </FormGroup>
       </Form></Segment>)}
-      
-        
       </Container>
       )
     }

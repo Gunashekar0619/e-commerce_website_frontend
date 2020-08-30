@@ -22,7 +22,9 @@ class Login extends Component{
             phone_no:"",
             address:"",
             city:"",
-            country:""
+            country:"",
+            state:"",
+            pincode:"",
         },
         usertype : "",
         errorMessage: "",
@@ -228,8 +230,8 @@ class Login extends Component{
                     </a><br/>
                     </ModalActions>
                     </form>
-                    ): (<Segment style={{width:'70%'}}>
-                        <h1 className = "ui segment " style = {{backgroundColor : 'grey' , color : "white" , textAlign : "center"}}>
+                    ): (<Segment style={{width:'100%'}}>
+                        <h1 className = "ui segment " style = {{width:"100%",backgroundColor : 'grey' , color : "white" , textAlign : "center"}}>
                         Signup Form 
                     </h1>
                         <Divider/>
@@ -316,14 +318,32 @@ class Login extends Component{
                             value={this.state.signupdetails.city}
                         />
                         <Form.Field
+                            name='state'
+                            label="State"
+                            placeholder="State"
+                            control={Input}
+                            onChange={this.signupchange}
+                            value={this.state.signupdetails.state}
+                        />
+                        </FormGroup>
+                    <FormGroup>
+                        <Form.Field
                             name='country'
                             label="Country"
                             placeholder="Country"
                             control={Input}
                             onChange={this.signupchange}
                             value={this.state.signupdetails.country}
-                        /></FormGroup>
-                    <FormGroup>
+                        />
+                    <Form.Field
+                            name="pincode"
+                            label ="Pincode"
+                            placeholder = "Pincode"
+                            control = {Input}
+                            type = "number"
+                            value={this.state.signupdetails.pincode}
+                            onChange={this.signupchange}
+                        />
                         <Form.Field
                             name="password"
                             label ="Password"
@@ -343,14 +363,13 @@ class Login extends Component{
                         />
                     </FormGroup>
                     <Divider></Divider>
-                <Container>
-                <Button floated="right" onClick={this.fullsignup}>Signup </Button>
+                <div style={{"height":"40px"}}>
+                <Button positive floated="right" onClick={this.fullsignup}>Signup </Button>
                 <span onClick={()=>{this.setState({isloginview : true})}} style = {{'color':"blue"}} > <u>I already have Account?</u></span>
-                </Container>
+                </div>
                 </Form></Segment>)}
                 <button className="ui button primary" style={{float:"right",marginTop:"0px" }} onClick= {this.home}>Home</button>
                 <br/><br/>
-                <Divider/>
             </Modal>
         </div>       
         )

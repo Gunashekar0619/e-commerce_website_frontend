@@ -23,7 +23,7 @@ import {
   Modal,
   Header,
   Rating,
-  
+  Message,
   Grid,
   Button,
   Image,
@@ -64,7 +64,9 @@ class Food extends Component {
       flist :[],
       itemsel:"",
       updatedList: [],
-      count:0 
+      count:0,
+      allitems :true,
+      nearItems :[]
   }    
 
   stock = async (name)=>{
@@ -125,29 +127,55 @@ componentDidMount(){
 }
   contextRef = createRef()
 
-  imagedisplay = food => {
-    if(food.name === "Oreo"){
-      return(Oreo)
-    }else if(food.name === "Darkfantasy"){
-      return (Darkfantasy)
-    }else if(food.name === "Donuts"){
-      return (Donuts)
-    }else if(food.name === "Snickers"){
-      return (Snickers)
-    }else if(food.name === "Dairymilk"){
-      return(Dairym)
-    }else if(food.name === "Petrol"){
-      return(Petrol)
-    }else if(food.name === "Diseal"){
-      return (Diseal)
-    }else if(food.name === "Onion"){
-      return (Onion)
-    }else if(food.name === "Carrot"){
-      return (Carrot)
-    }else if(food.name === "Water"){
-      return (Water)
-    }
+  NearBY = () => {
+    console.log(this.props.list);
+    var products = this.props.list; 
+    var nearItem =[]
+    products.map(item => {
+      if(this.props.userDetails.pincode === item.pincode){
+        nearItem.push(item)
+      }
+    })
+    this.state.nearItems = nearItem
+    console.log(this.state.nearItems);
+    var duplicate= Array.from(new Set(nearItem.map(s => s.name)))
+      .map(name => {
+        return nearItem.find(s => s.name === name)
+      })
+    console.log(duplicate );
+    var updateDuplicate =[]
+    this.setState({allitems : false})
   }
+
+  AllItems = () =>{
+    this.setState({allitems : true})
+  }
+
+  imagedisplay = food =>{
+    switch (food) {
+      case "Oreo":
+        return(Oreo)
+      case "Darkfantasy":
+        return (Darkfantasy)
+      case "Donuts":
+        return (Donuts)
+      case "Snickers":
+        return (Snickers)
+      case "Dairymilk":
+        return(Dairym)
+      case "Petrol":
+        return(Petrol)
+      case "Diseal":
+        return (Diseal)
+      case "Onion":
+        return (Onion)
+      case "Carrot":
+        return (Carrot)
+      case "Water":
+        return (Water)
+      default:
+        break;
+    }}
 
 closeConfigShow = (closeOnEscape, closeOnDimmerClick,name) => () => {
   this.setState({ closeOnEscape, closeOnDimmerClick, open: true ,itemsel:name})
@@ -171,46 +199,100 @@ close = () => this.setState({ open: false })
           <Ref innerRef={this.contextRef}>
             <Segment raised >
             <Label size="big" as='a' color='teal' ribbon>Other</Label>
-                  <span ><Label size="large" pointing='below'>Available </Label></span>
-                  {!this.state.open ? (<Segment raised >                  
+            {this.state.allitems ?
+                <Label style={{marginLeft :"34%"}} size="large" pointing='below'>Goods in  Stock</Label> :
+               <Label style={{marginLeft :"34%"}} size="large" pointing='below'>Goods Near BY </Label> }
+               {this.state.usertype !== "admin" ? 
+               <Button.Group floated="right">
+                <Button primary onClick={()=>this.AllItems()}>All</Button>
+                <Button.Or />
+                <Button onClick={()=>this.NearBY()}  primary>Near by</Button>
+              </Button.Group>:""}
+                  {!this.state.open ? (
+                  this.state.allitems ? <Segment raised >
+                    {this.state.usertype !== "admin" ? 
+                  <Message negative>
+                    <Message.Header>Select NearBY to see the goods which is Available in your area</Message.Header>
+                    <Button style={{position : "absolute",right : "6px",top : "5px"}} onClick={()=>this.NearBY()} primary>NearBY</Button>
+                  </Message>:""}
                   <Grid columns={2} centered divided>
-                    <Grid.Row>
-                        { this.props.list.map(food => {   
+                    <Grid.Row >
+                        { this.state.updatedList.map( food => {   
                             return(                    
-                            <Grid.Column key={food.id} >
-                              <Segment size="small"   piled style={{"width":"450px","height":"auto"}} >
+                            <Grid.Column key={food.id}>
+                              <Segment size="small" piled style={{"width":"450px","height":"auto"}} >
                               <Grid columns='two'>
                               <Grid.Column width={6}>
-                                  <Image onClick={this.closeConfigShow(true, false,food)} rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(food)} />
+                                  <Image onClick={this.closeConfigShow(true, false,food)} rounded size="small" style={{"height":"auto"}} bordered src={this.imagedisplay(food.name)}/>
                               </Grid.Column>      
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
                                 <Label>Price : $ {food.price} </Label><br/>
-                                <Label>Available Stock :  {food.count} </Label><br/>
-                                <Label>Location : {food.location}</Label>
-                                </Grid.Column>
+                               <Label>Available Stock :  {food.count} </Label><br/>
+                            <Label>Location : {food.location}</Label>
+                               {/* <Label><Rating icon='star' defaultRating={this.state.food.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label> */}
+                              {/* <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>  */}
+                               </Grid.Column>
+                               
+                                </Grid>
+                                <Divider/>
+                               {this.state.usertype === "admin" ? ( <div>
+                                <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button>
+                                </div>): (<div>{food.pincode === this.props.userDetails.pincode ?
+                              food.count > 0 ?(<Link to={{pathname:`/customer/order/${food.id}`}} ><Button 
+                                positive
+                                floated = "right">Order</Button></Link> ):(<Button 
+                                  basic color='red'
+                                floated = "right">Out of Stock</Button> ) :""}
+                                <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button></div>)}
+                                <br/><br></br>
+                              </Segment>
+                              <Divider/>
+                            </Grid.Column>)
+                         })}</Grid.Row>
+                </Grid> 
+            </Segment> : <Segment raised >
+                  <Grid columns={2} centered divided>
+                    <Grid.Row >
+                        { this.state.nearItems.map( food => {   
+                            return(                    
+                            <Grid.Column key={food.id}>
+                              <Segment size="small" piled style={{"width":"450px","height":"auto"}} >
+                              <Grid columns='two'>
+                              <Grid.Column width={6}>
+                                  <Image onClick={this.closeConfigShow(true, false,food)} rounded size="small" style={{"height":"auto"}} bordered src={this.imagedisplay(food.name)}/>
+                              </Grid.Column>      
+                              <Grid.Column width={9}> 
+                                <h2>{food.name} </h2>
+                                <Label>Price : $ {food.price} </Label><br/>
+                               <Label>Available Stock :  {food.stock} </Label><br/>
+                            <Label>Seller Name : {food.ownerName}</Label><br/>
+                            <Label>Location : {food.location}</Label>
+                               {/* <Label><Rating icon='star' defaultRating={this.state.food.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label> */}
+                              {/* <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>  */}
+                               </Grid.Column>
+                               
                                 </Grid>
                                 <Divider/>
                                {this.state.usertype === "admin" ? ( <div>
                                 <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button>
                                 </div>): (<div>
-                              {food.count === 0 ?(<Button 
-                                  basic color='red'
-                                floated = "right">Out of Stock</Button> ):(<Button 
+                              {food.stock > 0 ?(<Link to={{pathname:`/customer/order/${food.id}`}} ><Button 
                                 positive
-                                floated = "right">Order</Button> )}
+                                floated = "right">Order</Button></Link> ):(<Button 
+                                  basic color='red'
+                                floated = "right">Out of Stock</Button> )}
                                 <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button></div>)}
-                                <br/><br></br><br/>
+                                <br/><br></br>
                               </Segment>
                               <Divider/>
-                            </Grid.Column>)                
-                         })
-                        }</Grid.Row>
-                </Grid>
-                </Segment> ):(<div>
+                            </Grid.Column>)
+                         })}</Grid.Row>
+                </Grid> 
+            </Segment> ):(<div>
             <Segment raised >
             <Modal
-            style={{ "width":"600px","height":"330px" , marginLeft : "25%", marginTop : "10%"}}
+            style={{ "width":"600px","height":"auto" , marginLeft : "25%", marginTop : "10%"}}
           open={open}
           closeOnEscape={closeOnEscape}
           closeOnDimmerClick={closeOnDimmerClick}
@@ -222,7 +304,7 @@ close = () => this.setState({ open: false })
           <Modal.Content>
               <Grid columns={2} style={{"bordercolor":"red"}}>
                 <Grid.Column width={5}>     
-            <Image rounded size="small" style={{"height":"100px"}} bordered src={this.imagedisplay(this.state.itemsel.name)} />
+            <Image rounded size="small" style={{"height":"auto"}} bordered src={this.imagedisplay(this.state.itemsel.name)} />
             </Grid.Column>
             <Grid.Column>
             <Header>{this.state.itemsel.name}</Header>
@@ -240,13 +322,13 @@ close = () => this.setState({ open: false })
               <Button negative onClick = {() => this.handleDelete( this.state.itemsel.id)}>DELETE</Button>
               <Link to={{pathname:`/seller/${this.state.itemsel.id}/addgoods`}}><Button onClick= {()=> {this.updategoods()}} positive>Edit</Button></Link>
               </div>
-            ): (<div><Button floated="right">Add to Cart</Button>
-            {this.state.itemsel.count === 0?(<Button 
-                basic color='red'
-              floated = "right">Out of Stock</Button> ):(<Button 
+            ): (<div>{this.state.itemsel.pincode === this.props.userDetails.pincode ?
+              this.state.itemsel.stock ?(<Button style={{marginBottom:"10px"}}
                 positive
-                floated = "right">Order</Button> )}</div>)}
-            
+                floated = "right">Order</Button> ):(<Button style={{marginBottom:"10px"}}
+                  basic color='red'
+                floated = "right">Out of Stock</Button> ) : <Message style={{textAlign:"center"}} warning> <Message.Header>This Product is not Available in your location</Message.Header> </Message>}</div>)}
+              
             </Modal.Actions>
         </Modal>
         </Segment>

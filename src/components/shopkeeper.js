@@ -54,30 +54,14 @@ class admin extends Component {
                 .then(res =>{ this.setState({goods : [...this.state.goods,res]})
                 
               })
-            }
-            
-            // id.forEach(element => {
-            //     fetch(`http://127.0.0.1:8000/api/Goods/${element}/`,{
-            //     method: 'GET',
-            //   }).then(resp => resp.json())
-            //   .then(res =>{ arra.push(res);
-            //   })
-            // });            
+            }   
         }
-
-        // const g= id=>{id.map( id => {
-            
-        // })
-        //  console.log(this.state.goods);
-        
-        // }
     }
 
     d = () =>{
         
         switch (this.state.activeform) {
             case "home":
-                
                 return (<Sellerhome list = {this.state.goods} userid = {this.state.currnt_user.user_id} ></Sellerhome>)
             default:
                 break;
@@ -88,24 +72,9 @@ class admin extends Component {
         
         this.setState({activeform : f})
     }
-    // componentDidMount(){
-    //     console.log();
-    //     switch (this.state.activeform) {
-    //         case "home":
-    //            return <Sellerhome list={this.state.goods} user_id = {this.state.currnt_user.user_id} token={this.state.currnt_user.to1ken}></Sellerhome>        
-    //         default:
-    //             break;
-    //     }
-    // }
+
     render() { 
-       
-        
-        // switch (this.state.activeform) {
-        //             case "home":
-        //                return <Sellerhome list={this.state.goods} user_id = {this.state.currnt_user.user_id} token={this.state.currnt_user.to1ken}></Sellerhome>        
-        //             default:
-        //                 break;
-        //         }
+
         return (<React.Fragment>
             <Menubar present = {()=>this.actform} user = "seller" active={this.state.activeform}/>
             <Divider></Divider>

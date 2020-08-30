@@ -118,14 +118,14 @@ class admin extends Component {
     
     findfood=()=>{
         this.state.goods.map(item =>{
-            if (item.type === "food"){
+            if (item.type === "Food"){
             return(
                 this.setState({food1: [...this.state.food1,item]})
             )
-            }else if(item.type === "grocesy"){
+            }else if(item.type === "Grocery"){
                 return(
                     this.setState({veggies1: [...this.state.veggies1,item]})
-                )}else if (item.type === "fuel"){
+                )}else if (item.type === "Fuel"){
                    return ( this.setState({fuel1: [...this.state.fuel1,item]}))
                 } else return(this.setState({other1 : [...this.state.other1,item]}))
         })

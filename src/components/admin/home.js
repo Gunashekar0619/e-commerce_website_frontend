@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Grid, CardHeader,Transition, CardContent,Modal,Button, GridRow, GridColumn, Label} from 'semantic-ui-react'
+import { Card, Grid, CardHeader,Transition, CardContent,Modal,Button, GridRow, GridColumn, Label, Icon} from 'semantic-ui-react'
 
 
 export default class home extends Component {
@@ -52,16 +52,17 @@ export default class home extends Component {
                 </Grid>
                 {/* {this.state.details ?(<Count header={this.state.header} status={true}/>):""} */}
                
-            <Modal className="modal" style={{marginTop :"15%", marginLeft:"40%",width:"300px"}} open ={this.state.details}>
+            <Modal className="modal" style={{marginTop :"15%", marginLeft:"40%",width:"230px"}} open ={this.state.details}>
                 <Modal.Header>
                     {this.state.header}
+                    <Icon style={{position:"absolute",right:"10px",cursor:"pointer"}}  onClick={this.close} size="small" name="x"></Icon>
                 </Modal.Header>
                 <Modal.Content>
                     {this.state.header=== "Users" ? (
-                    <Grid style={{"height":"100px",marginLeft:"10px"}}>
+                    <Grid style={{ width:"auto" , "height":"auto",marginLeft:"10px"}}>
                         <GridRow columns={2}>
-                        <GridColumn>
-                            <GridRow >
+                        <GridColumn >
+                            <GridRow style={{marginBottom :"5px"}}>
                                 <Label>Customers</Label>
                             </GridRow>
                             <GridRow>
@@ -69,25 +70,25 @@ export default class home extends Component {
                             </GridRow>
                         </GridColumn>
                         <GridColumn>
-                            <GridRow>
-                            :<Label>{ this.props.customer}</Label>
+                            <GridRow style={{marginBottom :"10px"}}>
+                            :<Label style={{position:"absolute",right:"0px"}} >{ this.props.customer}</Label>
                             </GridRow>
                             <GridRow>
-                            :<Label>{this.props.seller}</Label>
+                            :<Label style={{position:"absolute",right:"0px"}}>{this.props.seller}</Label>
                             </GridRow>
                         </GridColumn>
                         </GridRow>
                     </Grid>):(
-                    <Grid style={{marginLeft:"10px"}}>
+                    <Grid style={{ width:"auto" , "height":"auto",marginLeft:"10px"}}>
                         <GridRow columns={2}>
                             <GridColumn>
-                            <GridRow>
+                            <GridRow style={{marginBottom :"5px"}}>
                                 <Label>Foods</Label>
                             </GridRow>
-                            <GridRow>
+                            <GridRow style={{marginBottom :"5px"}}>
                                 <Label>Fuels</Label>
                             </GridRow>
-                            <GridRow>
+                            <GridRow style={{marginBottom :"5px"}}>
                                 <Label>Grocery</Label>
                             </GridRow>
                             <GridRow>
@@ -95,28 +96,23 @@ export default class home extends Component {
                             </GridRow>
                             </GridColumn>
                         <GridColumn>
-                        <GridRow>
-                            :<Label>{ this.props.food}</Label>
+                        <GridRow style={{marginBottom :"10px"}}>
+                            :<Label style={{position:"absolute",right:"0px"}}>{ this.props.food}</Label>
                             </GridRow>
-                            <GridRow>
-                            :<Label>{this.props.fuel}</Label>
+                            <GridRow style={{marginBottom :"10px"}}>
+                            :<Label style={{position:"absolute",right:"0px"}}>{this.props.fuel}</Label>
                             </GridRow>
-                            <GridRow>
-                            :<Label>{ this.props.grocery}</Label>
+                            <GridRow style={{marginBottom :"10px"}}>
+                            :<Label style={{position:"absolute",right:"0px"}}>{ this.props.grocery}</Label>
                             </GridRow>
-                            <GridRow>
-                            :<Label>{this.props.others}</Label>
+                            <GridRow style={{marginBottom :"10px"}}>
+                            :<Label style={{position:"absolute",right:"0px"}}>{this.props.others}</Label>
                         </GridRow>                        
                         </GridColumn>
                         </GridRow>
                     </Grid>    
                     )}
                 </Modal.Content>
-                <Modal.Actions style={{}}>
-                    <Button onClick={this.close}>
-                        Close
-                    </Button>
-                </Modal.Actions>
             </Modal>
             </div>
         )
