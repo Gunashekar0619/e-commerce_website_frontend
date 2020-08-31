@@ -192,10 +192,10 @@ class Profile extends Component {
             <Button onClick={this.upview} positive floated="right">Update</Button>
             </Container>
         </Segment> ):(<Segment>
-        <Button active onClick={this.reload} floated="right">Back</Button>
+          <Icon style={{position:"absolute",right:"10px",cursor:"pointer"}}  onClick={this.reload} size="large" name="x"></Icon>
         <h3 size="large">Edit Profile</h3>
         <Divider/>
-        <Form style={{width:"100%"}}>
+        <Form style={{width:"100%",height:"370px"}}>
         <Form.Group widths='equal'>
           <Form.Field
           placeholder = 'username'
@@ -275,8 +275,9 @@ class Profile extends Component {
             onChange={this.proinputchanged}
             value={this.state.userdetails.country}
           />
-        </FormGroup>
-        <FormGroup>
+        </FormGroup><br/>
+        <Divider style={{marginTop:"-9px"}}></Divider>
+        <FormGroup style={{position:"absolute",right:"10px",bottom:"-6px"}}>
           <Form.Field
             negative
             id='form-button-control-public'

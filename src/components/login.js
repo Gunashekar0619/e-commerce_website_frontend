@@ -257,13 +257,36 @@ class Login extends Component{
                                     value={this.state.signupdetails.type}
                                     onChange={this.signupchange}
                                 /> */}
-                                
-                        <select label = "type" className="ui selection " name = "type"
+                        <Form.Field>
+                            <span>Gender</span>
+                            <select placeholder="gender" name="type" value = {this.state.signupdetails.type} onChange={this.signupchange}>
+                            <optgroup disabled>
+                            <option>Type</option>
+                            </optgroup>
+                            <optgroup>
+                            <option value="male">Seller</option>
+                            <option value="female">Buyer</option>
+                            </optgroup>
+                        </select>
+                        </Form.Field><Form.Field>
+                            <span>Gender</span>
+                            <select placeholder="gender" name="gender" value = {this.state.signupdetails.gender} onChange={this.signupchange}>
+                            <optgroup disabled>
+                            <option>Select gender</option>
+                            </optgroup>
+                            <optgroup>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            </optgroup>
+                        </select>
+                        </Form.Field>   
+                        {/* <select label = "type" className="ui selection " name = "type"
                          value = {this.state.signupdetails.type} onChange={this.signupchange}>
                             <option  value="N/A">Type</option>
                             <option value="seller">Seller</option>
                             <option value="Customer">Buyer</option>
-                        </select>
+                        </select> */}
 
                                 {/* <Dropdown 
                                     name="gender"
@@ -276,14 +299,15 @@ class Login extends Component{
                                                 { text: 'Other', value: 'Other'},]}
                                 /> */}
                         
-                        <select label = "gender" className="ui selection " name = "gender"
+                        {/* <select label = "gender" className="ui selection " name = "gender"
                          value = {this.state.signupdetails.gender} onChange={this.signupchange}>
                             <option value="N/A">Gender</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Other</option>
-                        </select>
-                        </Form.Group><Form.Group widths={"equal"} >
+                        </select> */}
+                        </Form.Group>
+                        <Form.Group widths={"equal"} >
                         <Form.Field 
                             name='email'
                             control={Input}

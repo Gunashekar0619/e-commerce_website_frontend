@@ -232,12 +232,13 @@ class payment extends Component {
     }
 
     OrderClicked = result =>{
+        var TID= Math.floor(100000000000 + Math.random() * 900000000000);
         var product = { goods: this.state.good,
                     total: this.state.order_total,
                     Quantity: this.state.good_qty }
         var order = {user : this.state.user,
                      Product : product,
-                           }
+                    transactionid:TID   }
         var success = result
         var transactionData = {
             quantity: product.Quantity,
@@ -248,7 +249,7 @@ class payment extends Component {
             price : this.state.good.price,
             shipmentAddress : this.state.user.address + ',' + this.state.user.city + ',' + this.state.user.country,
             seller : this.state.good.owner,
-            transationid : Math.floor(100000000000 + Math.random() * 900000000000),
+            transationid : TID,
             success : success,
             total : product.total,
         }
@@ -407,7 +408,7 @@ class payment extends Component {
 
                     <div style={{"margin":"10px"}}>
                     <Input style={{width:"40%"}}
-                    placeholder="MM/YY"
+                     placeholder="MM/YY"
                      name="expiry"
                      type="number"
                      maxLength = {5}
@@ -467,6 +468,7 @@ class payment extends Component {
                     placeholder="MM/YY"
                      name="expiry"
                      type="number"
+                     pattern="[0-9]{2}/[0-9]{4}" 
                      value={this.state.cardDetails.Expiry}
                      onChange={this.inputchange}
                      onFocus={this.handleInputFocus}></Input>

@@ -30,7 +30,7 @@ class response extends Component {
                     />
 
                 <Segment>
-                    <Message><MessageHeader>Transaction ID :</MessageHeader></Message>
+        <Message><MessageHeader>Transaction ID : {this.state.product.transactionid}</MessageHeader></Message>
                     <Grid style={{"marginLeft":"20px","marginTop":"20px"}}>
                         <GridRow columns="2" >
                             <GridColumn>
