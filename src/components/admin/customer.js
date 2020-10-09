@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import user from './user'
-import { Table,Grid,Popup, Menu ,Icon,Segment,Checkbox,Header,TransitionablePortal, Divider, Button } from 'semantic-ui-react';
+import { Table,Popup, Icon,Segment,Header,TransitionablePortal, Divider, Button } from 'semantic-ui-react';
 
 export default class customer extends Component {
     constructor(props){
@@ -46,7 +46,7 @@ export default class customer extends Component {
         })    
     }
     render() {
-        const { animation, duration, open } = this.state
+        const { animation, duration } = this.state
         console.log(this.state.alluser);
         let slno = 1;
         return (

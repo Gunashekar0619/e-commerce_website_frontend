@@ -185,7 +185,7 @@ render() {
         this.props.list.map( food => {   
           return(                    
             <Grid.Column key={food.id}>
-                <Segment size="small"  piled style={{"width":"450px","height":"160px"}} >
+                <Segment size="small"  piled style={{"width":"450px","height":"auto"}} >
                 <Grid columns='two'>
                 <Grid.Column width={6}>
                   <Image rounded size="small" style={{"height":"90px"}} bordered src={this.imagedisplay(food.name)}/>
@@ -194,6 +194,7 @@ render() {
                 <Link to={{pathname:`/product/${food.id}`,history:{page1}}}><h2>{food.name} </h2></Link>
                 <Label>Price : $ {food.price} </Label><br/>
                 <Label>Available Stock :  {food.stock} </Label><br/>
+                <Divider/>
                 <Link to={{pathname:`/product/${food.id}`,history:{page1}}}><Button primary floated='right' >
                   View Details
                   <Icon name='right chevron' />

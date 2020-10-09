@@ -197,7 +197,7 @@ class Login extends Component{
         return (
 
                 <div className="container" >
-                <Modal open dimmer style={{minWidth:"300px",height:"auto",minHeight:"400px",marginBottom:"10%",marginTop:"5%",marginLeft : "20%" ,marginRight:"25%",padding:"20px"}}>
+                <Modal open dimmer style={{minWidth:"300px",height:"auto",minHeight:"300px",marginBottom:"10%",marginTop:"5%",marginLeft : "20%" ,marginRight:"25%",padding:"20px"}}>
                 {this.state.isloginview ? (<form style={{width:'100%'}} className = "ui form">                
                     <ModalHeader style={{height:"50px" ,marginTop : "5%"}}>
                     <h1 className = "ui segment " style = {{ backgroundColor:"DarkGrey", color : "black" , textAlign : "center" ,font: "small-caps bold 20px/0 serif"}}>                        Login 
@@ -223,10 +223,9 @@ class Login extends Component{
                     <Input fluid placeholder = 'Password'  name = "password" type = "password" value = {this.state.credentials.password} onChange={this.inputchanged}/><br/>
                     </ModalContent>
                     <ModalActions style={{paddingLeft:"20px",paddingRight:"20px"}}>
-                    <button className="ui button primary" onClick ={this.loginform}> Login </button>
-                    <Divider horizontal>Or</Divider>
-                    <a style={{float:"left"}} onClick={this.istoggleview}>
-                        Create Account
+                    <button className="ui button primary" style={{float:"right"}} onClick ={this.loginform}> Login </button>
+                    <a style={{float:"left",marginTop:"10px",color:"blue",cursor:"pointer"}} onClick={this.istoggleview}>
+                       <u> Create Account </u>
                     </a><br/>
                     </ModalActions>
                     </form>
@@ -389,11 +388,10 @@ class Login extends Component{
                     <Divider></Divider>
                 <div style={{"height":"40px"}}>
                 <Button positive floated="right" onClick={this.fullsignup}>Signup </Button>
-                <span onClick={()=>{this.setState({isloginview : true})}} style = {{'color':"blue"}} > <u>I already have Account?</u></span>
+                <span onClick={()=>{this.setState({isloginview : true})}} style = {{'color':"blue",cursor:"pointer"}} > <u>I already have Account?</u></span>
                 </div>
                 </Form></Segment>)}
-                <button className="ui button primary" style={{float:"right",marginTop:"0px" }} onClick= {this.home}>Home</button>
-                <br/><br/>
+                
             </Modal>
         </div>       
         )

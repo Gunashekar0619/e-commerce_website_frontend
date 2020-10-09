@@ -467,7 +467,7 @@ class payment extends Component {
                     <Input style={{width:"40%"}}
                     placeholder="MM/YY"
                      name="expiry"
-                     type="number"
+                     type="input"
                      pattern="[0-9]{2}/[0-9]{4}" 
                      value={this.state.cardDetails.Expiry}
                      onChange={this.inputchange}

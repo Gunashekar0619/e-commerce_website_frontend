@@ -89,15 +89,15 @@ class Productinfo extends React.Component {
         return (Snickers)
       case "Dairymilk":
         return(Dairym)
-      case "petrol":
+      case "Petrol":
         return(Petrol)
-      case "diseal":
+      case "Diseal":
         return (Diseal)
-      case "onion":
+      case "Onion":
         return (Onion)
-      case "carrot":
+      case "Carrot":
         return (Carrot)
-      case "water":
+      case "Water":
         return (Water)
       default:
         break;
@@ -126,7 +126,7 @@ class Productinfo extends React.Component {
     return (
      <div>
         <Modal 
-        style = {{"maxWidth":"50%", "marginLeft": "20%" ,"marginRight":"20%","maxHeight":"300px","minHeight":"300px","marginTop" : "10%" }}
+        style = {{"maxWidth":"50%", "marginLeft": "20%" ,"marginRight":"20%","maxHeight":"auto","minHeight":"300px","marginTop" : "10%" }}
         open>
            {this.state.erro1r ? (
                             <Message negative>
@@ -139,7 +139,7 @@ class Productinfo extends React.Component {
           <Modal.Content>
             <Grid columns = {2}>
               <Grid.Column width="6">
-                <Image style={{"height":"90px"}} src={this.imagedisplay(this.state.goods.name)}></Image>
+                <Image style={{"maxHeight":"300px"}} src={this.imagedisplay(this.state.goods.name)}></Image>
               </Grid.Column>
               <Grid.Column>
                 <Label>Name</Label><span>{this.state.goods.name}</span><br/>

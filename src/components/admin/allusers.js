@@ -108,7 +108,7 @@ export default class userlist extends Component {
           >
             <Segment
               style={{
-                left: '40%',
+                left: '70%',
                 position: 'fixed',
                 top: '20%',
                 zIndex: 1000,

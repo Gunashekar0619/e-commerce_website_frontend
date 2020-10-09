@@ -21,7 +21,7 @@ const routing = (
     <BrowserRouter>
       <CookiesProvider>
         <Route exact path="/seller/:userid/addgoods" component={addgoods}/>
-        <Route exact path="/" component={App}/>
+        <Route exact path="/" component={Login}/>
         <Route exact path="/login" component={Login}/>
         <Route exact path="/profile/:userid" component={Profile}/>
         <Route exact path="/seller" component={Shopkeeper}/>

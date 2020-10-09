@@ -4,7 +4,6 @@ import Menubar from '../menu'
 import { Link } from 'react-router-dom'
 import { withCookies} from 'react-cookie';
 import Response from "../response"
-import user from '../admin/user';
 
 class Goodsform extends Component {
   constructor(props){

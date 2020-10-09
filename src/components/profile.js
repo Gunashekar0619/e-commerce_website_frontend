@@ -31,9 +31,9 @@ class Profile extends Component {
       updatefm:false,
       token:cookies.token,
       current_user: {
-        username:cookies.username,
+        username:"",
         user_id:cookies.user_id,
-        email:cookies.email
+        email:""
       },
       userdetails:"",
       profile_id:"",
@@ -56,8 +56,7 @@ class Profile extends Component {
         this.setState({userdetails : d}); 
       })
       .catch(error => this.setState({erro1r : true}))   
-      profile()
-
+      
       const user = () => fetch(`http://127.0.0.1:8000/api/user/${this.state.current_user.user_id}/`,{
       method: 'GET',
       headers: {
@@ -66,12 +65,14 @@ class Profile extends Component {
       }     
       }).then ( res => res.json())
       .then (res => {
-        const d = res.data;
-        console.log(d.profile_id);
-        this.setState({current_user : {username:d.username,
+        let d = res;
+        this.setState({current_user : {username:d.username, user_id:this.state.current_user.user_id,
           email:d.email}}) 
       })
-      .catch(error => this.setState({erro1r : true}))
+      .catch(error => {
+        console.log(error);
+        this.setState({erro1r : true})})
+      profile()
       user()
     }
  
@@ -93,7 +94,7 @@ class Profile extends Component {
       // console.log("clicked");
       // console.log(this.state.current_user);
       // console.log(this.state.userdetails);
-      (fetch(`http://127.0.0.1:8000/api/user/${this.state.current_user.user_id}/update12/`,{
+     fetch(`http://127.0.0.1:8000/api/user/${this.state.current_user.user_id}/update12/`,{
       method: 'POST',
       headers: {
           'content-type': 'application/json',
@@ -102,9 +103,9 @@ class Profile extends Component {
       body : JSON.stringify({"username":this.state.current_user.username,"email":this.state.current_user.email})
       }).then( resp => resp.json())
       .then ( res => {this.setState({current_user:res});
-                // console.log("usertabe");
+                console.log(res);
       })
-      .catch(error => console.log(error)))
+      .catch(error => console.log(error))
 
       const profile=()=>(fetch(`http://127.0.0.1:8000/api/profile/${this.state.current_user.user_id}/`,{
       method: 'post',
@@ -115,6 +116,7 @@ class Profile extends Component {
       body : JSON.stringify(this.state.userdetails)
       }).then( resp => resp.json())
       .then ( res => {this.setState({userdetails:res})
+      console.log(res);
       this.updated()
         // console.log("protable");        
       })
@@ -195,7 +197,7 @@ class Profile extends Component {
           <Icon style={{position:"absolute",right:"10px",cursor:"pointer"}}  onClick={this.reload} size="large" name="x"></Icon>
         <h3 size="large">Edit Profile</h3>
         <Divider/>
-        <Form style={{width:"100%",height:"370px"}}>
+        <Form style={{width:"100%",height:"370px"}} onSubmit={this.updateclicked}>
         <Form.Group widths='equal'>
           <Form.Field
           placeholder = 'username'
@@ -224,6 +226,7 @@ class Profile extends Component {
           <Form.Field 
           name='email'
           control={Input}
+          type="email"
           label='Email'
           onChange={this.userinputchanged}
           value={this.state.current_user.email}      
@@ -286,6 +289,7 @@ class Profile extends Component {
             content='Cancel'
           />
           <Form.Field
+          type="submit"
           positive
             id='form-button-control-public'
             control={Button}

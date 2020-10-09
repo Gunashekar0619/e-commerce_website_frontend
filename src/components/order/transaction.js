@@ -62,7 +62,7 @@ class transaction extends Component {
       
         return (
             <Modal open 
-            style={{"marginLeft":"15%", marginTop: '5%'}}>
+            style={{"marginLeft":"20%", marginTop: '5%'}}>
                 <ModalHeader>Transactions <Icon style={{position:"absolute",right:"10px",cursor:"pointer"}} onClick={()=>{this.closeModal()}} size="small" name="x"></Icon></ModalHeader>
                 <ModalContent>
                 {console.log(this.state.transactions)}

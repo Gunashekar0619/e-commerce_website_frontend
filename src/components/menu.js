@@ -106,7 +106,8 @@ class Menubar extends Component {
           :""}
           <Menu.Menu position='right'>
             {this.props.user === "admin" ? "" :
-            <Menu.Item onClick={() => this.history()}>History</Menu.Item>}
+            this.goodsmenu()?
+            <Menu.Item onClick={() => this.history()}>History</Menu.Item> :""}
           <Dropdown trigger={trigger} style={{"color":"white"}} pointing className='link item'>
               <Dropdown.Menu>
                   <Link to={{pathname:`/profile/${this.state.userid}`}}><Dropdown.Item selected > Profile <Icon style={{ position:"absolute",right:"2px" }} name="caret right"></Icon></Dropdown.Item></Link>

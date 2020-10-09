@@ -21,7 +21,6 @@ import {
   Grid,
   Button,
   Image,
-  Icon,
   Label,
   // Item,
   // Rail,
@@ -292,7 +291,7 @@ class Food extends Component {
           <Modal.Content>
               <Grid columns={2} style={{"bordercolor":"red"}}>
                 <Grid.Column width={5}>     
-            <Image rounded size="small" style={{"height":"100px"}} bordered src={this.imagedisplay(this.state.itemsel)} />
+            <Image rounded size="small" style={{"height":"100px"}} bordered src={this.imagedisplay(this.state.itemsel.name)} />
             </Grid.Column>
             <Grid.Column>
             <Header>{this.state.itemsel.name}</Header>
