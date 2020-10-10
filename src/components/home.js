@@ -55,6 +55,41 @@ export default  withCookies (class home extends Component {
     }
   }
   
+  handleRate = (e, { rating, maxRating }) =>{
+    this.setState({ uprate :{rating, maxRating}})    
+    // console.log(rating);
+    // console.log(this.props.user);
+    // console.log("1st"+rating);
+    fetch(`http://127.0.0.1:8000/api/Goods/${this.state.itemsel.id}/rate_goods/`,{
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json',
+            'Authorization' : `Token ${this.state.token}`
+        },
+        body: JSON.stringify({stars : rating,userid:this.state.currnt_user.user_id })
+        }).then(res => {
+          // console.log("res1"+ res.result.stars);        
+          this.setState({itemsel:{avg_ratings:res.result.stars}})
+        //   // console.log("res 2"+this.state.itemsel.avg_ratings);
+        //   this.getDetails()Cannot assign "<django.contrib.auth.models.AnonymousUser object at 0x052ADCB8>"
+        })
+        .catch(error => console.log(error))   
+       
+  }
+  getDetails = () => {
+    fetch(`http://127.0.0.1:8000/api/Goods/${this.state.itemsel.id}/`,{
+        method: 'GET',
+        headers: {
+            'Content-Type':'application/json',
+            
+        }
+        }).then( resp => resp.json())
+        .then ( res => {this.setState({itemsel:res});
+      console.log(this.state.itemsel);
+      }
+        )
+        .catch(error => console.log(error)) 
+    }
   closeConfigShow = (closeOnEscape, closeOnDimmerClick,name) => () => {
     this.setState({ closeOnEscape, closeOnDimmerClick, open: true ,itemsel:name})    
   }
@@ -188,7 +223,7 @@ export default  withCookies (class home extends Component {
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
-                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : $ {food1.price} </Label><br></br>
+                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : ₹ {food1.price} </Label><br></br>
                   <Button primary onClick={this.closeConfigShow(true, false,food1)} >Product Details</Button>
                   {!this.state.admin ?(<Link to={{pathname:`/customer/order/${food1.id}`}} ><Button positive floated="right" >buy</Button></Link>):""}
                 </Card.Content>
@@ -215,7 +250,7 @@ export default  withCookies (class home extends Component {
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
-                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : $ {food1.price} </Label><br></br>
+                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : ₹ {food1.price} </Label><br></br>
                   <Button primary onClick={this.closeConfigShow(true, false,food1)} >Product Details</Button>
                   {!this.state.admin ?(<Link to={{pathname:`/customer/order/${food1.id}`}} ><Button positive floated="right" >buy</Button></Link>):""}
                 </Card.Content>
@@ -242,7 +277,7 @@ export default  withCookies (class home extends Component {
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
-                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : $ {food1.price} </Label><br></br>
+                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : ₹ {food1.price} </Label><br></br>
                   <Button primary onClick={this.closeConfigShow(true, false,food1)}>Product Details</Button>
                   {!this.state.admin ?(<Link to={{pathname:`/customer/order/${food1.id}`}} ><Button positive floated="right" >buy</Button></Link>):""}
                 </Card.Content>
@@ -269,7 +304,7 @@ export default  withCookies (class home extends Component {
                 <Card.Content>
                   <Card.Header>{food1.name}</Card.Header>
                   <Card.Meta>{food1.type}</Card.Meta>
-                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : $ {food1.price} </Label><br></br>
+                  <Label style={{position:"absolute",right:"10px",bottom:"80px"}}>Price : ₹ {food1.price} </Label><br></br>
                   <Button primary onClick={this.closeConfigShow(true, false,food1)}>Product Details</Button>
                   {!this.state.admin ?(<Link to={{pathname:`/customer/order/${food1.id}`}} ><Button positive floated="right" >buy</Button></Link>):""}
                 </Card.Content>
@@ -319,7 +354,7 @@ export default  withCookies (class home extends Component {
             <Grid.Column>
             <Header>{this.state.itemsel.name}</Header>
             <Label>Type : {this.state.itemsel.type}</Label><br/>
-            <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
+            <Label size="large"> Price : ₹{this.state.itemsel.price}</Label><br/>
             <Label><Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
             <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
             <Label> Location : {this.state.itemsel.location} </Label><br/>

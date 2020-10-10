@@ -257,14 +257,14 @@ class Login extends Component{
                                     onChange={this.signupchange}
                                 /> */}
                         <Form.Field>
-                            <span>Gender</span>
+                            <span>Type</span>
                             <select placeholder="gender" name="type" value = {this.state.signupdetails.type} onChange={this.signupchange}>
                             <optgroup disabled>
                             <option>Type</option>
                             </optgroup>
                             <optgroup>
-                            <option value="male">Seller</option>
-                            <option value="female">Buyer</option>
+                            <option value="seller">Seller</option>
+                            <option value="buyer">Buyer</option>
                             </optgroup>
                         </select>
                         </Form.Field><Form.Field>

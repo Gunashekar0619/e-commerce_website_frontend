@@ -192,7 +192,7 @@ render() {
                 </Grid.Column>      
                 <Grid.Column width={9}> 
                 <Link to={{pathname:`/product/${food.id}`,history:{page1}}}><h2>{food.name} </h2></Link>
-                <Label>Price : $ {food.price} </Label><br/>
+                <Label>Price : ₹ {food.price} </Label><br/>
                 <Label>Available Stock :  {food.stock} </Label><br/>
                 <Divider/>
                 <Link to={{pathname:`/product/${food.id}`,history:{page1}}}><Button primary floated='right' >

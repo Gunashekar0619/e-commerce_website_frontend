@@ -227,7 +227,7 @@ close = () => this.setState({ open: false })
                               </Grid.Column>      
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
-                                <Label>Price : $ {food.price} </Label><br/>
+                                <Label>Price : ₹ {food.price} </Label><br/>
                                <Label>Available Stock :  {food.count} </Label><br/>
                             <Label>Location : {food.location}</Label>
                                {/* <Label><Rating icon='star' defaultRating={this.state.food.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label> */}
@@ -264,7 +264,7 @@ close = () => this.setState({ open: false })
                               </Grid.Column>      
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
-                                <Label>Price : $ {food.price} </Label><br/>
+                                <Label>Price : ₹ {food.price} </Label><br/>
                                <Label>Available Stock :  {food.stock} </Label><br/>
                             <Label>Seller Name : {food.ownerName}</Label><br/>
                             <Label>Location : {food.location}</Label>
@@ -309,7 +309,7 @@ close = () => this.setState({ open: false })
             <Grid.Column>
             <Header>{this.state.itemsel.name}</Header>
             <Label>Type : {this.state.itemsel.type}</Label><br/>
-            <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
+            <Label size="large"> Price : ₹{this.state.itemsel.price}</Label><br/>
             <Label><Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
             <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
             <br/><Label>Available in : {this.state.itemsel.count}</Label><br/>

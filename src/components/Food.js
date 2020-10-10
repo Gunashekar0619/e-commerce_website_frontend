@@ -28,11 +28,18 @@ Rating,
 } from 'semantic-ui-react'
 
 class Food extends Component {
-  state = {
+  constructor (props){
+    super(props);
+  const token = this.props.cookies.get('mr_user')
+  this.state = {
     page1:"admin",
     open: false,
       token: this.props.user,
       usertype : this.props.usertype,
+      currnt_user:{
+        to1ken : token.token,
+        user_id : token.user_id,
+        username : token.username},
       length: "",
       Item :{
         "id": "",
@@ -56,7 +63,7 @@ class Food extends Component {
       allitems :true,
       nearItems :[]
   }    
-
+  }
   contextRef = createRef()
   
   handleDelete(id){
@@ -71,23 +78,23 @@ class Food extends Component {
 
   handleRate = (e, { rating, maxRating }) =>{
     this.setState({ uprate :{rating, maxRating}})    
-    // console.log(this.state.itemsel.id);
+    // console.log(rating);
     // console.log(this.props.user);
     // console.log("1st"+rating);
     fetch(`http://127.0.0.1:8000/api/Goods/${this.state.itemsel.id}/rate_goods/`,{
         method: 'POST',
         headers: {
             'Content-Type':'application/json',
-            'Authorization' : `Token ${this.state.user}`
+            'Authorization' : `Token ${this.state.token}`
         },
-        body: JSON.stringify({stars : rating })
+        body: JSON.stringify({stars : rating,userid:this.state.currnt_user.user_id })
         }).then( resp => this.getDetails())
-        // .then(res => {
-        //   // console.log("res1"+ res.result.stars);        
-        //   this.setState({itemsel:{avg_ratings:res.result.stars}})
+        .then(res => {
+          // console.log("res1"+ res.result.stars);        
+          this.setState({itemsel:{avg_ratings:res.result.stars}})
         //   // console.log("res 2"+this.state.itemsel.avg_ratings);
-        //   this.getDetails()
-        // })
+        //   this.getDetails()Cannot assign "<django.contrib.auth.models.AnonymousUser object at 0x052ADCB8>"
+        })
         .catch(error => console.log(error))    
   }
 
@@ -259,7 +266,7 @@ imagedisplay = food =>{
                               </Grid.Column>      
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
-                                <Label>Price : $ {food.price} </Label><br/>
+                                <Label>Price : ₹ {food.price} </Label><br/>
                                <Label>Available Stock :  {food.count} </Label><br/>
                             <Label>Location : {food.location}</Label>
                                {/* <Label><Rating icon='star' defaultRating={this.state.food.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label> */}
@@ -271,7 +278,7 @@ imagedisplay = food =>{
                                {this.state.usertype === "admin" ? ( <div>
                                 <Button onClick={this.closeConfigShow(true, false,food)} floated="right">Product Details</Button>
                                 </div>): (<div>{food.pincode === this.props.userDetails.pincode ?
-                              food.count > 0 ?(<Link to={{pathname:`/customer/order/${food.id}`}} ><Button 
+                              food.count > 0 ?(<Link to={{pathname:`/customer/order/₹{food.id}`}} ><Button 
                                 positive
                                 floated = "right">Order</Button></Link> ):(<Button 
                                   basic color='red'
@@ -296,7 +303,7 @@ imagedisplay = food =>{
                               </Grid.Column>      
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
-                                <Label>Price : $ {food.price} </Label><br/>
+                                <Label>Price : ₹ {food.price} </Label><br/>
                                <Label>Available Stock :  {food.stock} </Label><br/>
                             <Label>Seller Name : {food.ownerName}</Label><br/>
                             <Label>Location : {food.location}</Label>
@@ -341,7 +348,7 @@ imagedisplay = food =>{
             <Grid.Column>
             <Header>{this.state.itemsel.name}</Header>
             <Label>Type : {this.state.itemsel.type}</Label><br/>
-            <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
+            <Label size="large"> Price : ₹{this.state.itemsel.price}</Label><br/>
             <Label><Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
             <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
             <br/><Label>Available in : {this.state.itemsel.count}</Label><br/>

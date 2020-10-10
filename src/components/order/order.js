@@ -77,7 +77,7 @@ export default class Order extends Component {
               <Grid.Column>
                 <Label>Name</Label><span>{this.state.goods.name}</span><br/>
                 <Label>Type : {this.state.goods.type}</Label><br/>
-                <Label size="large"> Price : ${this.state.goods.price}</Label><br/>
+                <Label size="large"> Price : ₹{this.state.goods.price}</Label><br/>
                 <Label><Rating icon='star' defaultRating={this.state.goods.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
                 <Label>{this.state.goods.no_of_ratings}&nbsp; Ratings</Label>
                 <br/><Label>Available in : {this.state.goods.stock}</Label><br/>

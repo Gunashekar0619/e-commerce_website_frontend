@@ -84,7 +84,7 @@ class transaction extends Component {
                       <span >Order  # </span>
                       <span>{item.transationid}</span><br></br>
                       <span>Total : </span>
-                      <span>$ {item.total}</span>
+                      <span>₹ {item.total}</span>
                       </div >
                     </Card.Header>
                     <CardContent>
@@ -92,7 +92,7 @@ class transaction extends Component {
                         <GridRow>
                             <GridColumn style={{"width":"25%"}}>
                             <Header style={{marginLeft:"10px"}}>Success</Header>
-                            <Image src={this.imagedisplay("Oreo")} centered style = {{"marginLeft":"10px", "height":"auto","width":"100%"}}/>
+                            <Image src={this.imagedisplay(item.Goods)} centered style = {{"marginLeft":"10px", "height":"auto","width":"100%"}}/>
                             </GridColumn>
 
                             <GridColumn style={{"width":"50%",paddingLeft:"30px"}}> 

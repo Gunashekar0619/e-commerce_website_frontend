@@ -45,7 +45,15 @@ import {
 //const Placeholder = () => <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
 // const newt = this.props.cookies.get('mr_user')
 class Food extends Component {
-  state = {
+  constructor (props){
+    super(props);
+  const token = this.props.cookies.get('mr_user')
+  this.state = {
+    currnt_user:{
+      to1ken : token.token,
+      user_id : token.user_id,
+      username : token.username},
+ 
     open:false,
       token: this.props.user,
       usertype : this.props.usertype,
@@ -67,7 +75,42 @@ class Food extends Component {
       allitems :true,
       nearItems :[]
   }    
-
+  }
+  handleRate = (e, { rating, maxRating }) =>{
+    this.setState({ uprate :{rating, maxRating}})    
+    // console.log(rating);
+    // console.log(this.props.user);
+    // console.log("1st"+rating);
+    fetch(`http://127.0.0.1:8000/api/Goods/${this.state.itemsel.id}/rate_goods/`,{
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json',
+            'Authorization' : `Token ${this.state.token}`
+        },
+        body: JSON.stringify({stars : rating,userid:this.state.currnt_user.user_id })
+        }).then(res => {
+          // console.log("res1"+ res.result.stars);        
+          this.setState({itemsel:{avg_ratings:res.result.stars}})
+        //   // console.log("res 2"+this.state.itemsel.avg_ratings);
+        //   this.getDetails()Cannot assign "<django.contrib.auth.models.AnonymousUser object at 0x052ADCB8>"
+        })
+        .catch(error => console.log(error))   
+       
+  }
+  getDetails = () => {
+    fetch(`http://127.0.0.1:8000/api/Goods/${this.state.itemsel.id}/`,{
+        method: 'GET',
+        headers: {
+            'Content-Type':'application/json',
+            
+        }
+        }).then( resp => resp.json())
+        .then ( res => {this.setState({itemsel:res});
+      console.log(this.state.itemsel);
+      }
+        )
+        .catch(error => console.log(error)) 
+    }
   stock = async (name)=>{
     // console.log("1 inside");
     
@@ -225,7 +268,7 @@ close = () => this.setState({ open: false })
                               </Grid.Column>      
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
-                                <Label>Price : $ {food.price} </Label><br/>
+                                <Label>Price : ₹ {food.price} </Label><br/>
                                 <Label>Available Stock :  {food.count} </Label><br/>
                                 <Label>Location : {food.location}</Label>
                                {/* <Label><Rating icon='star' defaultRating={this.state.food.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label> */}
@@ -262,7 +305,7 @@ close = () => this.setState({ open: false })
                               </Grid.Column>      
                               <Grid.Column width={9}> 
                                 <h2>{food.name} </h2>
-                                <Label >Price : $ {food.price} </Label><br/>
+                                <Label >Price : ₹ {food.price} </Label><br/>
                                <Label>Available Stock :  {food.stock} </Label><br/>
                             <Label>Seller Name : {food.ownerName}</Label><br/>
                             <Label>Location : {food.location}</Label>
@@ -307,7 +350,7 @@ close = () => this.setState({ open: false })
             <Grid.Column>
             <Header>{this.state.itemsel.name}</Header>
             <Label>Type : {this.state.itemsel.type}</Label><br/>
-            <Label size="large"> Price : ${this.state.itemsel.price}</Label><br/>
+            <Label size="large"> Price : ₹{this.state.itemsel.price}</Label><br/>
             <Label><Rating icon='star' defaultRating={this.state.itemsel.avg_ratings} onRate={this.handleRate} maxRating={5} ></Rating></Label>
             <Label>{this.state.itemsel.no_of_ratings}&nbsp; Ratings</Label>
             <br/><Label>Available in : {this.state.itemsel.count}</Label><br/>
